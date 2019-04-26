@@ -1,0 +1,77 @@
+\section{Randomized QuickSort (RQS)}
+
+Vi starter med at definere ''rank'' $i$ af et element, som vi lader være dets position $S_{(i)}$ i det endelige sorterede array (1-indeksering), altså:\\
+
+$S_{(i)}$: Element med rank $i$ (givet 1-indeksering)\\
+
+F.eks.:
+\begin{verbatim}
+input:  [3, 0, 5, 2] (usorteret array)
+output: [0, 2, 3, 5] (sorteret array)
+\end{verbatim}
+Så vil eksempelvis $S_{(2)} = 2$ og $S_{(4)} = 5$\\
+
+
+For alle $1 \leq i < j \leq n$ har vi, at $X_{ij} = 1$ hvis $S_{(i)}$ og $S_{(j)}$ sammenlignes af RQS, og 0 ellers. Vi kan gøre det med en simpel indikatorvariabel, da to elementer aldrig kan blive sammenlignet mere end én gang.\\
+
+Da får vi følgende, hvor startgrænsen $j > i$ på det andet sumtegn gælder da sammenligningerne er symmetriske.
+$$
+X = \sum_{i=1}^n \sum_{j>i} X_{ij}
+$$
+\textit{Mål: Find øvre grænse for $\e[X]$}
+
+Nu bruges \cref{eq:linearity}, linearity of expectation:
+\begin{align} \label{eq:exp-X}
+\e[X] = \e \square{ \sum_{i=1}^n \sum_{j>i} X_{ij}} = \sum_{i=1}^n \sum_{j>i} \e[X_{ij}] = \sum_{i=1}^n \sum_{j>i} \P[X_{ij} = 1]
+\end{align}
+
+Herefter analyserer vi algoritmen:\\
+Den fungerer på følgende måde, at hvis vi f.eks. vælger $S_{(4)}$ som pivot i et array med seks elementer vil vi have:
+\begin{align} \label{eq:eksempel}
+\square{S_{(1)}, S_{(2)}, S_{(3)},} \underbrace{S_{(4)}}_{\text{pivot}}, \square{ S_{(5)}, S_{(6)}}
+\end{align}
+Herefter vil $S_{(4)}$ aldrig blive sammenlignet med nogle elementer igen, og algoritmen ville nu kigge på de to delarrays der er lavet hver for sig.
+
+
+Lad os skrive det op mere generelt, hvor vi har to indekser $i,j$ hvor $1 \leq i < j \leq n$. Vi kan da skrive vores array op således:
+$$
+S_{(1)}, S_{(2)}, S_{(3)}, \dots, S_{(i)}, \dots, S_{(j)}, \dots, S_{(n-1)}, S_{(n)}
+$$
+
+Nu vælges en pivot $S_{(k)}$. Da har vi tre mulige cases som beskrevet nedenfor for hvor $k$ vælges:
+
+\begin{enumerate}
+	\item $k < i$ eller $k > j$:\\
+	$S_{(i)}$ og $S_{(j)}$ bliver ikke sammenlignet i denne iteration af rekursionstræet
+	\item $i < k < j$:\\
+	$S_{(i)}$ og $S_{(j)}$ sammenlignes \textit{aldrig}. Det skyldes at de vil blive delt ind i hver deres subarray, se evt. \cref{eq:eksempel}.
+	\item $k=i$ eller $k=j$:\\
+	$S_{(i)}$ og $S_{(j)}$ sammenlignes netop én gang (og herefter aldrig igen).
+\end{enumerate}
+
+Vi kan nu i vores analyse ignorere case 1, da $S_{(i)}$ og $S_{(j)}$ ikke sammenlignes her, men vi stadig går et niveau dybere i vores rekursionstræ og der derfor er mulighed for at de sammenlignes senere.\\
+
+Vi ser generelt for case 2 og 3, at de gælder når $i \leq k \leq j$. Case 3 giver os 2 mulige udfald for at de bliver sammenlignet. Antallet af mulige udfald i alt er længden fra $i$ til $j$, som må være $j - i + 1$. Altså får vi:
+\begin{align} \label{eq:prob-xij}
+\P[X_{ij} = 1] = \frac{2}{j - i + 1}
+\end{align}
+
+
+Vi benytter nu dette til at regne videre på \cref{eq:exp-X}:
+\begin{align}
+\e[X] &= \sum_{i=1}^n \sum_{j>i} \P[X_{ij} = 1] \nonumber \\
+      &= \sum_{i=1}^n \sum_{j>i} \frac{2}{j - i + 1} \nonumber \\
+      &= 2 \sum_{i=1}^n \sum_{j>i} \frac{1}{j - i + 1} \nonumber \\
+   &\leq 2 \sum_{i=1}^n \sum_{k=1}^n \frac{1}{k} \label{eq:mindre} \\
+      &= 2n \sum_{k=1}^n \frac{1}{k} \nonumber \\
+      &= 2n H_n \label{eq:harmonic} \\
+      &= O(n \lg n) \nonumber
+\end{align}
+Ovenfor gælder uligheden ved \cref{eq:mindre}, da $j-i+1 \geq 2$ (da $j$ altid minimum er 1 større end $i$), og $j$ ikke vil gå ''længere ud'' end til $n$.\\
+I \cref{eq:harmonic} benytter vi hvad der kaldes det $n$'te Harmoniske tal, som er defineret som $H_n = \sum_{i=1}^n (1/i) = \ln n + \Theta(1)$.\\
+
+Herved kommer vi altså frem til, at $\e[X] = O(n \lg n)$. Da $\e[X]$ er det forventede antal sammenligninger som Randomized QuickSort udfører, må køretiden ligeledes være dette for algoritmen.
+
+
+
+
