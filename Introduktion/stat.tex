@@ -47,13 +47,13 @@ Så kunne vi f.eks. have at et event $\E$ er mængden af elementary events med $
 \P[\E] &= \frac{5}{16}
 \end{align*}
 
-Givet parvis disjunkte events $\E_1, ..., \E_n$, har vi følgende, som svarer til det skraverede område på \ref{fig:disjunkt}:
+Givet parvis disjunkte events $\E_1, \cdots, \E_n$, har vi følgende, som svarer til det skraverede område på \ref{fig:disjunkt}:
 \begin{align} \label{eq:disjunkt}
-\P[\E_1 \cup ... \cup \E_n] = \P \square{\bigcup_{i=1}^n \E_i} = \sum_{i=1}^{n} \P[\E_i]
+\P[\E_1 \cup \cdots \cup \E_n] = \P \square{\bigcup_{i=1}^n \E_i} = \sum_{i=1}^{n} \P[\E_i]
 \end{align}
 
 \subsubsection{Union bound}
-Mere generelt kan ovenstående formuleres som, at givet events $\E_1, ..., \E_n$ (som ikke nødvendigvis er disjunkte), så vil følgende gælde, hvor venstresiden svarer til det skraverede område på \ref{fig:union}:
+Mere generelt kan ovenstående formuleres som, at givet events $\E_1, \cdots, \E_n$ (som ikke nødvendigvis er disjunkte), så vil følgende gælde, hvor venstresiden svarer til det skraverede område på \ref{fig:union}:
 \begin{align} \label{eq:union-bound}
 \P \square{\bigcup_{i=1}^n \E_i} \leq \sum_{i=1}^{n} \P[\E_i]
 \end{align}
@@ -71,7 +71,7 @@ Eksempelvis kunne vi have følgende:
 \E_2 &= \curly{HHHH, HHHT} &\P[\E_2 | \E_1] &= 1
 \end{align*}
 
-\subsection{Stokatiske variable (random variables)}
+\subsection{Stokastiske variable (random variables)}
 En random variable er en funktion $X: \Omega \rightarrow \R$:
 
 Eks. med to møntkast:
@@ -100,11 +100,10 @@ For vores ovenstående eksperiment vil det f.eks. være:
 
 
 \subsubsection{Linearity of expectation}
-Givet random variables $X_1, ..., X_n$ og givet konstanter $c_1, ..., c_n$, så vil
+Givet random variables $X_1, \cdots, X_n$ og givet konstanter $c_1, \cdots, c_n$, så vil
 \begin{align} \label{eq:linearity}
 \e \square{\sum_{i=1}^{n} c_i X_i} = \sum_{i=1}^n c_i \e[X_i]
 \end{align}
-
 
 \subsubsection{Probability distribution function (pdf)}
 Vi kan opskrive en probability distribution function for $X$. Nedenfor ses det plottet. Af de to typer til højre ønsker vi oftere en af typen $\e[Y]$, da vi så er mere sikre på hvad vi vil få:
@@ -123,6 +122,7 @@ Lad da $X$ være en indikator-variabel, som er 1 ved $H$ og 0 ved $T$.
 
 Da vil:
 \begin{align*}
-\P[X = 1] &= p, \longspace \P[X = 0] = 1 - p\\
+\P[X = 1] &= p\\
+\P[X = 0] &= 1 - p\\
     \e[X] &= \P[X = 1] = p
 \end{align*}

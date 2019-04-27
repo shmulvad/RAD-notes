@@ -35,7 +35,7 @@ Herefter vil $S_{(4)}$ aldrig blive sammenlignet med nogle elementer igen, og al
 
 Lad os skrive det op mere generelt, hvor vi har to indekser $i,j$ hvor $1 \leq i < j \leq n$. Vi kan da skrive vores array op således:
 $$
-S_{(1)}, S_{(2)}, S_{(3)}, \dots, S_{(i)}, \dots, S_{(j)}, \dots, S_{(n-1)}, S_{(n)}
+S_{(1)}, S_{(2)}, S_{(3)}, \cdots, S_{(i)}, \cdots, S_{(j)}, \cdots, S_{(n-1)}, S_{(n)}
 $$
 
 Nu vælges en pivot $S_{(k)}$. Da har vi tre mulige cases som beskrevet nedenfor for hvor $k$ vælges:
@@ -71,7 +71,3 @@ Ovenfor gælder uligheden ved \cref{eq:mindre}, da $j-i+1 \geq 2$ (da $j$ altid 
 I \cref{eq:harmonic} benytter vi hvad der kaldes det $n$'te Harmoniske tal, som er defineret som $H_n = \sum_{i=1}^n (1/i) = \ln n + \Theta(1)$.\\
 
 Herved kommer vi altså frem til, at $\e[X] = O(n \lg n)$. Da $\e[X]$ er det forventede antal sammenligninger som Randomized QuickSort udfører, må køretiden ligeledes være dette for algoritmen.
-
-
-
-
