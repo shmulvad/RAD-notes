@@ -134,7 +134,12 @@ Nu kan vi benytte \cref{eq:bpp-prob-split} til at regne videre på \cref{eq:bpp-
       &= O(n \lg n) \label{eq:bpp-final}
 \end{align}
 
-I \cref{eq:bpp-X-weird} benytter vi, at for $k = 1,2, ..., n-1$ kan der højest være to segmenter $s'$, så $k_{s, s'} = k$. \textbf{TODO: Hvad?... Uddyb}.
+%I \cref{eq:bpp-X-weird} benytter vi, at for $k = 1,2, ..., n-1$ kan der højest være to segmenter $s'$, så $k_{s, s'} = k$. \textbf{TODO: Hvad?... Uddyb}.
+
+
+Husk at $k_{s, s'}$ betegner antallet af linje segmenter $s$ går igennem indtil den når $s’$ (med $s’$). Så lad $k=1,2,..n-1$, også har vi at $k_{s,s’} = k$. Vi kan have linje segmenter på venstre og højre siden af s, som kan ses i \cref{fig:bpp-split-k}. Dvs. at der højst kan være 2 segmenter $s'$ - altså 2 forskellige muligheder for denne og vi er altså nødt til at tælle denne sandsynlighed dobbelt. Dette er hvad vi ser i \cref{eq:bpp-X-weird}.
+
+
 \begin{figure}[H]
     \begin{center}
     \includegraphics[width=0.5\textwidth]{bpp-split-k.pdf}
