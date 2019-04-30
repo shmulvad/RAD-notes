@@ -1,0 +1,15 @@
+\section{Typer af randomiserede algoritmer}
+\subsection{Las Vegas}
+Finder altid en korrekt løsning, men køretiden er tilfældig. Randomiseret QuickSort er et eksempel på en Las Vegas algoritme.
+
+\subsection{Monte Carlo}
+Kan fejle, men vi kan begrænse sandsynligheden for fejl. Køretiden kan både være tilfældig eller deterministisk. Min-Cut er et eksempel på en Monte Carlo algoritme.\\
+
+For Monte Carlo er der ydermere to undertyper:\\
+\emph{1-sided error:} Kan kun give forkert svar ved f.eks. ''yes'' eller kun forkert svar ved ''no''.\\
+\emph{2-sided error:} Kan give forkert svar både ved ''yes'' og ''no''.
+
+
+
+\subsection{Probabilistic method}
+Givet at en randomiseret algoritme løser et problem med $O(f(n))$ tid eller ''størrelse'' i forventning, så \emph{vil} der for ethvert input findes en løsning med $O(f(n))$ tid/størrelse. F.eks. vil der for ethvert input til Binary Planar Partitions gælde, at der findes en autopartition med $O(n \lg n)$ delsegmenter.

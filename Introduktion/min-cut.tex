@@ -40,9 +40,9 @@ Da der er $n$ knuder til at starte med og der fjernes én pr. contraction, så m
 Da $k = |C|$ for et min-cut $C$, så må minimum cut-størrelsen i $G$ være $\geq k$. Derfor må der altså også som minimum være $k$ kanter der rører hver knude, så $G_{\text{min\_degree}} \geq k$.\\
 
 Da vi havde, at der var $n-i+1$ knuder i $G$, og vi lige har vist at de alle minimum har degree $k$, så kan vi få et lower bound for antal kanter $|E|$ i $G$:
-\begin{align}
+\begin{align*}
 |E| \geq \frac{(n-i+1)k}{2}
-\end{align}
+\end{align*}
 
 Her dividerer vi med 2, da vi tager højde for at enhver kant $e$ vil røre to knuder.\\
 
@@ -64,7 +64,7 @@ Sandsynlighed for $\E_i$ givet succes i alle foregående iterationer kan herved 
 
 \subsection{Sandsynlighed for succes for én hel kørsel}
 
-Da sandsynligheden for at algoritmen terminerer med korrekt resultat svarer til sandsynligheden for at ingen kanter i $C$ vælges i \emph{nogle som helst} af iterationerne (hvor vi tager højde for at der muligvis kan findes flere gyldige min-cut $C'$), kan vi benytte \cref{eq:prob-succes-given-former-succes} til at opskrive følgende:
+Da sandsynligheden for at algoritmen terminerer med korrekt resultat svarer til sandsynligheden for at ingen kanter i $C$ vælges i \emph{nogle som helst} af iterationerne (hvor vi tager højde for at der muligvis kan findes flere gyldige min-cut), kan vi benytte \cref{eq:prob-succes-given-former-succes} til at opskrive følgende:
 \begin{align}
     \P[\text{Succes}] &\geq \P \square{ \bigcup_{i=1}^{n-2}   \E_i} \label{eq:p-succes} \\
                       &= \P[\E_1] * \P[\E_2 | \E_1] * \P[\E_3 | \E_1 \cap \E_2] \cdots \P \square{ \E_{n-2} \middle| \bigcap_{i=1}^{n-3} \E_i } \nonumber \\
@@ -72,7 +72,7 @@ Da sandsynligheden for at algoritmen terminerer med korrekt resultat svarer til 
                       &\geq \prod_{i=1}^{n-2} \p{ \frac{n-i-1}{n-i+1} } \label{eq:indsaat-res} \\
                       &= \frac{\cancel{(n-2) \cdots 4*3}*2*1 }{n(n-1)\cancel{(n-2) \cdots 4*3} } \nonumber \\
                       &= \frac{2}{n(n-1)} \nonumber \\
-                      &\geq \frac{2}{n^2} \label{eq:final-prob-min}
+                      &\geq \frac{2}{n^2} \nonumber
 \end{align}
 
 I \cref{eq:p-succes} gælder ulighedstegnet, da der muligvis findes flere gyldige min-cuts.\\
