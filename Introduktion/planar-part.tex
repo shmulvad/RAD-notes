@@ -67,7 +67,7 @@ Et eksempel følger her med uddybende forklaringer nedenfor:
         ]
     \end{forest}
 
-    \item[\textbf{(c)}] Vi vælger $s_1$. Når vi rammer et tidligere linje, her $l(s_2)$, skal vi ikke forlænge linjen yderligere. Derfor splitter den ikke nogle linjesegmenter. Den deler stadig arealet $B$ op i $B_1 = \emptyset$ (markeret med lyseblåt) og $B_2 = \{s_3' \}$ (markeret med hvid). Vi får træet:\\
+    \item[\textbf{(c)}] Vi vælger $s_1$. Når vi rammer en tidligere linje, her $l(s_2)$, skal vi ikke forlænge linjen yderligere. Derfor splitter den ikke nogle linjesegmenter. Den deler stadig arealet $B$ op i $B_1 = \emptyset$ (markeret med lyseblåt) og $B_2 = \{s_3' \}$ (markeret med hvid). Vi får træet:\\
     \begin{forest}
         [$(l(s_2)\text{, } \R^2)$
           [$(l(s_1)\text{, } B)$
@@ -114,13 +114,13 @@ Lad os nu betragte et fast $s$ og $s'$ og antage, at $l(s)$ skærer $s'$.
 \end{figure}
 
 
-Med $k_{s, s'}$ definerer vi antallet af linjesegmenter der lægger imellem $s$ og $s'$, eksklusiv $s$ og inklusiv $s'$. Vi kan regne ud, at $1 \leq k_{s, s'} \leq n-1$, da den altid som minimum vil inkludere $s'$ og potentielt kan inkludere alle linjesegmenter i $S$ pånær $s$.\\
+Med $k_{s, s'}$ definerer vi antallet af linjesegmenter der ligger imellem $s$ og $s'$, eksklusiv $s$ og inklusiv $s'$. Vi kan regne ud, at $1 \leq k_{s, s'} \leq n-1$, da den altid som minimum vil inkludere $s'$ og potentielt kan inkludere alle linjesegmenter i $S$ pånær $s$.\\
 
 Hvis vi nu har, at $s$ splitter $s'$, så må det nødvendigvis betyde, at $s$ er først i permutationen blandt de $k_{s, s'} + 1$ segmenter i tegningen. Heraf følger, at:
 \begin{align} \label{eq:bpp-prob-split}
     \P[X_{s, s'} = 1] = \P[\text{$s$ splitter $s'$}] \leq \frac{1}{k_{s, s'} + 1}
 \end{align}
-\textbf{TODO: Hvorfor '$\leq$'-tegnet og ikke bare '='?}
+\textbf{TODO: Hvorfor '$\leq$'-tegnet og ikke bare '='?} % Måske noget med, at der er en hvis sandsynlighed for, at segmenterne ikke ville splitte s' da de ikke går igennem. F.eks. som vi ser på Figuren med undtagelse af det sidste segment til venstre for s'
 
 
 Nu kan vi benytte \cref{eq:bpp-prob-split} til at regne videre på \cref{eq:bpp-X-init}:
@@ -134,21 +134,18 @@ Nu kan vi benytte \cref{eq:bpp-prob-split} til at regne videre på \cref{eq:bpp-
       &= O(n \lg n) \label{eq:bpp-final}
 \end{align}
 
-%I \cref{eq:bpp-X-weird} benytter vi, at for $k = 1,2, ..., n-1$ kan der højest være to segmenter $s'$, så $k_{s, s'} = k$. \textbf{TODO: Hvad?... Uddyb}.
 
-
-Husk at $k_{s, s'}$ betegner antallet af linje segmenter $s$ går igennem indtil den når $s’$ (med $s’$). Så lad $k=1,2,..n-1$, også har vi at $k_{s,s’} = k$. Vi kan have linje segmenter på venstre og højre siden af s, som kan ses i \cref{fig:bpp-split-k}. Dvs. at der højst kan være 2 segmenter $s'$ - altså 2 forskellige muligheder for denne og vi er altså nødt til at tælle denne sandsynlighed dobbelt. Dette er hvad vi ser i \cref{eq:bpp-X-weird}.
-
+I \cref{eq:bpp-X-weird} benytter vi for at få et upper bound, at for ethvert positivt tal $k$ kan der højest være to linjesegmenter $s'$ og $s''$ således at $k_{s, s'} = k_{s, s''} = k$ som illustreret på \ref{fig:bpp-split-k}. Det skyldes, at linjen $l(s)$ i begge retninger vil møde ethvert andet linjesegment højest én gang. Vi kan stoppe summen ved grænsen $n-1$ da det er den maksimale værdi for $k_{s, s'}$ som beskrevet ovenfor.
 
 \begin{figure}[H]
     \begin{center}
     \includegraphics[width=0.5\textwidth]{bpp-split-k.pdf}
     \end{center}
-    \caption{Vi ser, at der højest kan være to segmenter $s'$ for $s$}
+    \caption{Der kan højest være to segmenter for $s$ for et bestemt $k$. Her er $k = k_{s, s'} = k_{s, s''} = 3$.}
     \label{fig:bpp-split-k}
 \end{figure}
 
 I \cref{eq:bpp-mindre} ganger vi 2 udenfor sumtegnene. Derudover lader vi andet sumtegn iterere over værdier der er en højere for at få en pænere brøk.\\
-I \cref{eq:bpp-sum-til-n} - \cref{eq:bpp-final} benytter vi det $n$'te harmoniske tal $H_n = \ln n + \Theta(1)$.\\
+I \cref{eq:bpp-sum-til-n} - \cref{eq:bpp-final} benytter vi, at $|S| = n$ og herefter at det $n$'te harmoniske tal $H_n = \ln n + \Theta(1)$.\\
 
 Hermed har vi altså vist, at den forventede størrelse $\e[X]$ af vores output-træ vil være $O(n \lg n)$.
