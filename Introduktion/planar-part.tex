@@ -120,7 +120,15 @@ Hvis vi nu har, at $s$ splitter $s'$, så må det nødvendigvis betyde, at $s$ e
 \begin{align} \label{eq:bpp-prob-split}
     \P[X_{s, s'} = 1] = \P[\text{$s$ splitter $s'$}] \leq \frac{1}{k_{s, s'} + 1}
 \end{align}
-\textbf{TODO: Hvorfor '$\leq$'-tegnet og ikke bare '='?} % Måske noget med, at der er en hvis sandsynlighed for, at segmenterne ikke ville splitte s' da de ikke går igennem. F.eks. som vi ser på Figuren med undtagelse af det sidste segment til venstre for s'
+Årsagen til at det er mindre end eller lig, og ikke blot lig, illustreres på \ref{fig:bpp-split-ekstra} hvor $k_{s, s'} = 1$ men givet $u$ er først i permutationen vil $s$ ikke kunne splitte $s'$.
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.2\textwidth]{bpp-split-ekstra.pdf}
+  \end{center}
+  \caption{$k_{s, s'} = 1$, men $s$ splitter \emph{ikke} $s'$ da $u$ er først i permutationen.}
+  \label{fig:bpp-split-ekstra}
+\end{figure}
 
 
 Nu kan vi benytte \cref{eq:bpp-prob-split} til at regne videre på \cref{eq:bpp-X-init}:
