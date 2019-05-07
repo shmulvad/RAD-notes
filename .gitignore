@@ -10,8 +10,15 @@
 *.fdb_latexmk
 *.fls
 
-# The pdf itself
-*.pdf
+# Since a lot of assets are saved as pdf's, it is
+# prone to errors to exclude all pdf's completely.
+# This gets the job done 85% of the time while not
+# forcing the author to use git add -f for every
+# single asset
+main.pdf
+master.pdf
+output.pdf
+primary.pdf
 
 # Sketch files
 *.sketch
