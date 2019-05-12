@@ -1,1 +1,27 @@
 \section{Randomized Selection}
+\subsection{Algoritme}
+Tager en uordnet liste $S$ med $n$ elementer og $k \in \{1, ..., n\}$ som input og returnerer det $k$'te mindste element i $S$.\\
+
+I følgende bruger vi notationen:\\
+$L_{(i)}$: Det $i$'te mindste element i en liste $L$.\\
+$r_L(a)$: Rank af element $a$ i listen $L$.\\
+
+
+\texttt{LazySelect}$(S, k)$
+\begin{enumerate}
+  \item Vælg $n^{3/4}$ elementer uafhængigt og uniformt tilfældigt fra $S$. Lad $R$ være en multimængde af valgte elementer.
+  \item Sorter $R$.
+  \item Lad $x = kn^{-1/4}$ og
+  \begin{align*}
+    l = \max\{\floor{x - \sqrt{n}}, 1\}
+    \quad\quad & \quad\quad
+    h = \min\{\ceil{x + \sqrt{n}}, n^{3/4} \} \\
+    a = R_{(l)}
+    \quad\quad & \quad\quad
+    b = R_{(h)}
+  \end{align*}
+  Bestem rank $r_S(a)$ og $r_S(b)$.
+  \item Antag $k \in \square{ n^{1/4}, n-n^{1/4} }$ og lad $P = \{ y \in S | a \leq y \leq b \}$ (hvor $P$ f.eks. løbende blev lavet mens vi bestemte rank for $a$ og $b$).\\
+  Hvis $S_{(k)} \notin P$ eller $|P| > 4n^{3/4}+2$, gentag ovenstående
+  \item Sorter $P$ og returner $P_{(k - r_S(a) + 1)}$ .
+\end{enumerate}

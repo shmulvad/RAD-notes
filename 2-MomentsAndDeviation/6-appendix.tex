@@ -1,0 +1,21 @@
+\section{Appendix} \label{sec:appendix}
+Vi kom tidligere frem til, at
+$$
+\P{ \event_i^{\geq k} } \leq \pfrac{e}{k}^k \frac{1}{1 - \frac{e}{k}}
+$$
+og påstod, at det var $O(n^{-2})$ når vi valgte
+$$
+k = \frac{c \, \ln n}{\ln \ln n}
+$$
+
+Dette bevises her (for en passende konstant $c$):
+\begin{align*}
+  \P{ \event_i^{\geq k} }
+  &= O \p{ \pfrac{e \ln \ln n}{c \ln n}^{\frac{c \ln n}{\ln \ln n}} }\\
+  &= O \p{ \p{ e^{\ln \pfrac{e \ln \ln n}{c \ln n}} }^{\frac{c \ln n}{\ln \ln n}} }\\
+  &= O \p{ \p{ e^{\ln(e \ln \ln n) - \ln (c \ln n)} }^{\frac{c \ln n}{\ln \ln n}} }\\
+  &= O \p{ \p{ e^{-c' \ln \ln n} }^{\frac{c \ln n}{\ln \ln n}} }\\
+  &= O \p{ e^{- c' \ln n} }\\
+  &= O \p{ n^{-c'} }\\
+  &= O(n^{-2})
+\end{align*}

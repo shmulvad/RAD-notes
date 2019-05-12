@@ -23,6 +23,7 @@
 \usepackage{float} % Use [H] in figures
 \usepackage{subcaption} % For subfigures
 \usepackage{color} % May be necessary if you want to color links
+\usepackage{nameref}
 \usepackage{hyperref} % Make references clickable
 \usepackage[nameinlink,capitalize]{cleveref} % Make eq:refs be in style (1)
 \usepackage[linesnumbered, commentsnumbered, lined, ruled, vlined,
@@ -70,14 +71,16 @@
 \setlength{\algomargin}{3em}\DontPrintSemicolon
 
 \newcommand{\longspace}{{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
-\renewcommand{\P}{{\mathbb P}}
+% \renewcommand{\P}{{\mathbb P}}
 \newcommand{\R}{{\mathbb R}}
-\newcommand{\e}{{\mathbb E}}
-\newcommand{\E}{{\mathcal{E}}}
+\newcommand{\E}{{\mathbb E}}
+\newcommand{\event}{{\mathcal{E}}}
 \newcommand{\parfrac}[1]{\frac{\partial}{\partial #1}}
 \renewcommand{\num}{{\textrm{num} }}
 \newcommand{\size}{{\textrm{size} }}
 \newcommand{\ift}{{\textrm{if } }}
+
+\newcommand{\pfrac}[2]{\left( \frac{#1}{#2} \right)}
 
 % Dynamiske (), <>, ceil, floor
 \newcommand{\p}[1]{\left( #1 \right)}
@@ -90,59 +93,6 @@
 \newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
 \newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
 
-% Squiggly arrows
-\DeclareFontFamily{U} {MnSymbolC}{}
-
-\DeclareFontShape{U}{MnSymbolC}{m}{n}{
-	<-6> MnSymbolC5
-	<6-7> MnSymbolC6
-	<7-8> MnSymbolC7
-	<8-9> MnSymbolC8
-	<9-10> MnSymbolC9
-	<10-12> MnSymbolC10
-	<12-> MnSymbolC12}{}
-\DeclareFontShape{U}{MnSymbolC}{b}{n}{
-	<-6> MnSymbolC-Bold5
-	<6-7> MnSymbolC-Bold6
-	<7-8> MnSymbolC-Bold7
-	<8-9> MnSymbolC-Bold8
-	<9-10> MnSymbolC-Bold9
-	<10-12> MnSymbolC-Bold10
-	<12-> MnSymbolC-Bold12}{}
-
-\DeclareSymbolFont{MnSyC} {U} {MnSymbolC}{m}{n}
-
-\DeclareMathSymbol{\MNrhd}{\mathbin}{MnSyC}{76}
-\DeclareMathSymbol{\MNlhd}{\mathbin}{MnSyC}{78}
-% =============================================
-\DeclareFontFamily{U} {MnSymbolD}{}
-
-\DeclareFontShape{U}{MnSymbolD}{m}{n}{
-	<-6> MnSymbolD5
-	<6-7> MnSymbolD6
-	<7-8> MnSymbolD7
-	<8-9> MnSymbolD8
-	<9-10> MnSymbolD9
-	<10-12> MnSymbolD10
-	<12-> MnSymbolD12}{}
-\DeclareFontShape{U}{MnSymbolD}{b}{n}{
-	<-6> MnSymbolD-Bold5
-	<6-7> MnSymbolD-Bold6
-	<7-8> MnSymbolD-Bold7
-	<8-9> MnSymbolD-Bold8
-	<9-10> MnSymbolD-Bold9
-	<10-12> MnSymbolD-Bold10
-	<12-> MnSymbolD-Bold12}{}
-
-\DeclareSymbolFont{MnSyD} {U} {MnSymbolD}{m}{n}
-\DeclareMathSymbol{\MNsim}{\mathbin}{MnSyD}{2}
-
-% =============================================
-
-\usepackage{amssymb,amsmath,stackengine}
-\stackMath
-\newcommand\rsquigarrow[1]{%
-	\mathbin{\stackon[2pt]{\rightsquigarrow}{\scriptscriptstyle #1 }}
-}
+\renewcommand{\P}[1]{\mathbb{P} \square{ #1 } }
 
 \author{Søren Mulvad, rbn601}
