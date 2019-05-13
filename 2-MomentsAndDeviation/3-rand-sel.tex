@@ -10,7 +10,7 @@ $r_L(a)$: Rank af element $a$ i listen $L$.\\
 \texttt{LazySelect}$(S, k)$
 \begin{enumerate}
   \item Vælg $n^{3/4}$ elementer uafhængigt og uniformt tilfældigt fra $S$. Lad $R$ være en multimængde af valgte elementer.
-  \item Sorter $R$.
+  \item Sorter $R$ (dette ødelægger ikke vores køretid da $R$ relativt set er lille).
   \item Lad $x = kn^{-1/4}$ og
   \begin{align*}
     l = \max\{\floor{x - \sqrt{n}}, 1\}
@@ -21,7 +21,117 @@ $r_L(a)$: Rank af element $a$ i listen $L$.\\
     b = R_{(h)}
   \end{align*}
   Bestem rank $r_S(a)$ og $r_S(b)$.
-  \item Antag $k \in \square{ n^{1/4}, n-n^{1/4} }$ og lad $P = \{ y \in S | a \leq y \leq b \}$ (hvor $P$ f.eks. løbende blev lavet mens vi bestemte rank for $a$ og $b$).\\
-  Hvis $S_{(k)} \notin P$ eller $|P| > 4n^{3/4}+2$, gentag ovenstående
+  \item Antag $k \in \square{ n^{1/4}, n-n^{1/4} }$ og lad $P = \{ y \in S | a \leq y \leq b \}$.\\
+  Hvis $S_{(k)} \notin P$ eller $|P| > 4n^{3/4}+2$, gentag ovenstående.\\
+
+  $P$ kunne f.eks. løbende være blevet lavet mens vi bestemte rank for $a$ og $b$. Det er dette step, som bidrager med vores $2n$ sammenligninger.
   \item Sorter $P$ og returner $P_{(k - r_S(a) + 1)}$ .
 \end{enumerate}
+
+\subsection{Eksempel}
+Her ses et eksempel, hvor vi har et array hvor $n = 40$ og vi ønsker at finde det 37'ende mindste element, $k = 37$. På figuren nedenfor udføres først del 1 og 2 af algoritmen, hvor $n^{3/4} \approx 16$. Antag at alle de elementer vi valgte ud tilfældigvis var unikke. Så får vi måske følgende:
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{lazy1.pdf}
+  \end{center}
+  %\caption{Array $s$, hvor $n^{3/4}$ elementer er valgt og sorteret $R$}
+  \label{fig:lazy1}
+\end{figure}
+
+Herefter fås $x = kn^{-1/4} \approx 15$ og herved $l = 8$ og $h = 16$. Derved må $a$, som er det 8'te mindste element i $R$ og $b$, som er det 16'te mindste element i $R$, kunne ses som:
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{lazy2.pdf}
+  \end{center}
+  %\caption{$a$ og $b$ i sorteret $R$}
+  \label{fig:lazy2}
+\end{figure}
+
+Herefter bestemmer vi rank af $a$ og $b$, $r_S(a)$ og $r_S(b)$, i forhold til den originale liste $S$. Samtidig laver vi ud fra dette vores nye liste $P$. Det er dette, som bidrager med vores $2n$ sammenligninger. Hvis vi tegner vores nye liste $P$, sammenholdt med $S$ hvor den var sorteret, kunne det se således ud:
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{lazy3.pdf}
+  \end{center}
+  %\caption{caption}
+  \label{fig:lazy3}
+\end{figure}
+
+Her svarer de markerede grønne felter til de 16 felter vi valgte tilfældigt i $S$ til at starte med, men nu hvor den (blot på figuren, ikke i algoritmen) er skrevet op sorteret for at kunne sammenligne med $P$, som bliver sorteret af algoritmen. Vi fandt her, at $r_S(a) = 17$ og $r_S(b) = 39$.\\
+
+Da vi ikke fejler nogle af vores test i step 4 af algoritmen fortsætter vi til step 5. Vi får herved $P_{(k - r_S(a) + 1)} = P_{(37 - 17 + 1)} = P_{(21)}$, som svarer til $S_{(37)}$ hvilket netop var hvad vi skulle bestemme (markeret med gult på figuren).\\
+
+På et større taleksempel ville det typisk relativt set være en mindre del af $R$ der ville blive valgt ud.
+
+
+
+\subsection{Sandsynlighed for succes i første iteration}
+Med sandsynlighed $1 - O(n^{-1/4})$ er der succes i første iteration af linje 4 og dermed laver algoritmen kun $2n + o(n)$ sammenligninger.\\
+
+\textbf{Bevis}:\\
+Vi har tre mulige fejltyper:\\
+Fejltype 1: $S_{(k)} < a$\\
+Fejltype 2: $S_{(k)} > b$\\
+Fejltype 3: $|P| > 4 n^{3/4} + 2$.\\\\
+
+Vi fokuserer på fejltype 1. Det er en fejl vi får i følgende tilfælde:
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{fejltype1.pdf}
+  \end{center}
+  %\caption{caption}
+  \label{fig:fejltype1}
+\end{figure}
+
+
+
+
+For alle vores udtrukne elementer $i = 1, ..., n^{3/4}$, lad
+$
+X_i =
+\begin{cases}
+	1 & \text{hvis $i$'te sample $\leq S_{(k)}$}\\
+	0 & \text{ellers}
+\end{cases}
+$\\
+
+Da er $\E[X_i] = \P{X_i = 1} = \frac{k}{n}$, som det tydeligt ses på figuren da de første $1, ..., k$ elementer naturligvis vil være $\leq k$.
+
+Lad $X = \sum_{i=1}^{n^{3/4}} X_i$. Så får vi den forventede værdi til:
+$$
+\mu_X = \sum_{i=1}^{n^{3/4}} \frac{k}{n} = n^{3/4} * \frac{k}{n} = kn^{-1/4} = x
+$$
+
+Og da kan vi beregne:
+\begin{align}
+  \P{\text{Fejltype 1}} &= \P{X < l}\\
+  &= \P{X < \max \left\{ \floor{x - \sqrt{n}}, 1 \right\} }\\
+  &\leq \P{X < \floor{x - \sqrt{n}}}\\
+  &\leq \P{X < x - \sqrt{n}}\\
+  &= \P{X < \mu_X - \sqrt{n}}
+\end{align}
+
+Nu bruger vi, at givet \emph{uafhængige} stokastiske variable $Y_1, ..., Y_m$, hvor vi lader $Y = \sum_{i=1}^m Y_i$, da er $\sigma_Y^2 = \sum_{i=1}^m {\sigma_{Y_i}}^2$.
+
+\begin{align}
+  \sigma_X^2 &= \sum_{i=1}^{n^{3/4}} {\sigma_{X_i}}^2\\
+  &= \sum_{i=1}^{n^{3/4}} \frac{k}{n} \p{ 1 - \frac{k}{n} }\\
+  &\leq \sum_{i=1}^{n^{3/4}} \frac{1}{4}\\
+  &= \frac{n^{3/4}}{4}\\
+  &\Updownarrow\\
+  \sigma_X &= \frac{n^{3/8}}{2}
+\end{align}
+
+
+Regner vi nu videre på vores forrige resultat med denne viden får vi:
+\begin{align}
+  \P{\text{Fejltype 1}} &\leq \P{X \leq \mu_X - \sqrt{n}}\\
+  &= \P{-X \geq -\mu_X + \sqrt{n}}\\
+  &= \P{\mu_X - X \geq \sqrt{n}}\\
+  &\leq \P{|\mu_X - X| \geq \sqrt{n}}\\
+  &= \P{|\mu_X - X| \geq 2n^{1/8} * \frac{n^{3/8}}{2}  }\\
+  &\leq \P{ |\mu_X - X| \geq 2n^{1/8} \sigma_X }\\
+  &\leq \frac{1}{4n^{1/4}}\\
+  &= O(n^{-1/4})
+\end{align}
+
+TODO: Skriv mere forklarede tekst til mellemregningerne.
