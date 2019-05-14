@@ -89,49 +89,60 @@ For alle vores udtrukne elementer $i = 1, ..., n^{3/4}$, lad
 $
 X_i =
 \begin{cases}
-	1 & \text{hvis $i$'te sample $\leq S_{(k)}$}\\
+	1 & \text{hvis det $i$'te sample $\leq S_{(k)}$}\\
 	0 & \text{ellers}
 \end{cases}
 $\\
 
-Da er $\E[X_i] = \P{X_i = 1} = \frac{k}{n}$, som det tydeligt ses på figuren da de første $1, ..., k$ elementer naturligvis vil være $\leq k$.
+Da er $\E[X_i] = \P{X_i = 1} = \frac{k}{n}$, som det tydeligt ses på figuren da de første $1, ..., k$ elementer naturligvis vil være $\leq k$, og der er $n$ elementer i alt.
 
 Lad $X = \sum_{i=1}^{n^{3/4}} X_i$. Så får vi den forventede værdi til:
 $$
-\mu_X = \sum_{i=1}^{n^{3/4}} \frac{k}{n} = n^{3/4} * \frac{k}{n} = kn^{-1/4} = x
+\mu_X = \sum_{i=1}^{n^{3/4}} \mu_{X_i} = \sum_{i=1}^{n^{3/4}} \frac{k}{n} = n^{3/4} * \frac{k}{n} = kn^{-1/4} = x
 $$
+
+I eksemplet på fejltypen ovenfor er $X = 0$ og $l = 1$.
 
 Og da kan vi beregne:
 \begin{align}
-  \P{\text{Fejltype 1}} &= \P{X < l}\\
-  &= \P{X < \max \left\{ \floor{x - \sqrt{n}}, 1 \right\} }\\
-  &\leq \P{X < \floor{x - \sqrt{n}}}\\
-  &\leq \P{X < x - \sqrt{n}}\\
-  &= \P{X < \mu_X - \sqrt{n}}
+  \P{S_{(k)} < a} &= \P{X < l} \label{eq:x-less-l}  \\
+  &= \P{X < \max \left\{ \floor{x - \sqrt{n}}, 1 \right\} } \nonumber\\
+  &\leq \P{X \leq \floor{x - \sqrt{n}}} \label{eq:fjern-max} \\
+  &\leq \P{X \leq x - \sqrt{n}} \nonumber\\
+  &= \P{X \leq \mu_X - \sqrt{n}} \label{eq:p-simpel}
 \end{align}
 
-Nu bruger vi, at givet \emph{uafhængige} stokastiske variable $Y_1, ..., Y_m$, hvor vi lader $Y = \sum_{i=1}^m Y_i$, da er $\sigma_Y^2 = \sum_{i=1}^m {\sigma_{Y_i}}^2$.
+I \cref{eq:x-less-l} bruger vi, at $X$ er antal elementer (i en sorteret udgave af $S$) før eller ved placeringen af $S_{(k)}$. $l$ bestemmer hvilket element vi starter ved af de udtrukne. Derfor må fejltype 1 opstå, når antallet af udtrukne elementer der opfylder at være $\leq S_{(k)}$ er et mindre antal end vores ''start-index'' for de udtrukne elementer, $l$.\\
+I \cref{eq:fjern-max} benytter vi, at før tog vi max af de to udtryk. Ved nu altid bare at tage ét af udtrykkene kan det kun potentielt blive mindre, hvorved sandsynligheden også kun potentielt bliver mindre.\\
+\textbf{TODO: Hvad? Det giver jo ikke nogen mening at sandsynligheden potentielt bliver mindre.}\\
 
+Nu bruger vi det lemma, at givet \emph{uafhængige} stokastiske variable $Y_1, ..., Y_m$, hvor vi lader $Y = \sum_{i=1}^m Y_i$, da er variansen $\sigma_Y^2 = \sum_{i=1}^m {\sigma_{Y_i}}^2$:
 \begin{align}
-  \sigma_X^2 &= \sum_{i=1}^{n^{3/4}} {\sigma_{X_i}}^2\\
-  &= \sum_{i=1}^{n^{3/4}} \frac{k}{n} \p{ 1 - \frac{k}{n} }\\
-  &\leq \sum_{i=1}^{n^{3/4}} \frac{1}{4}\\
-  &= \frac{n^{3/4}}{4}\\
-  &\Updownarrow\\
-  \sigma_X &= \frac{n^{3/8}}{2}
+  \sigma_X^2 &= \sum_{i=1}^{n^{3/4}} {\sigma_{X_i}}^2 \nonumber \\
+  &= \sum_{i=1}^{n^{3/4}} \frac{k}{n} \p{ 1 - \frac{k}{n} } \label{eq:faa-paren} \\
+  &\leq \sum_{i=1}^{n^{3/4}} \frac{1}{4} \label{eq:paren-to-max} \\
+  &= \frac{n^{3/4}}{4} \nonumber \\
+  &\Updownarrow \nonumber \\
+  \sigma_X &= \frac{n^{3/8}}{2} \label{eq:std-dev}
 \end{align}
 
+I \cref{eq:faa-paren} bruger vi \textbf{TODO: Hvad... hvorfor er ${\sigma_{X_i}}^2 = k/n(1 - k/n)$?}\\
+I \cref{eq:paren-to-max} benytter vi, at udtrykket $p(1 - p)$ er størst når $p = 1/2$ og da bliver $1/4$.
+I \cref{eq:std-dev} tager vi kvadratroden og får herved standardafvigelsen.
 
-Regner vi nu videre på vores forrige resultat med denne viden får vi:
+Regner vi nu videre på \cref{eq:p-simpel} med denne viden får vi:
 \begin{align}
-  \P{\text{Fejltype 1}} &\leq \P{X \leq \mu_X - \sqrt{n}}\\
-  &= \P{-X \geq -\mu_X + \sqrt{n}}\\
-  &= \P{\mu_X - X \geq \sqrt{n}}\\
-  &\leq \P{|\mu_X - X| \geq \sqrt{n}}\\
-  &= \P{|\mu_X - X| \geq 2n^{1/8} * \frac{n^{3/8}}{2}  }\\
-  &\leq \P{ |\mu_X - X| \geq 2n^{1/8} \sigma_X }\\
-  &\leq \frac{1}{4n^{1/4}}\\
-  &= O(n^{-1/4})
+  \P{S_{(k)} < a} &\leq \P{X \leq \mu_X - \sqrt{n}} \nonumber \\
+  &= \P{-X \geq -\mu_X + \sqrt{n}} \nonumber \\
+  &= \P{\mu_X - X \geq \sqrt{n}} \nonumber \\
+  &\leq \P{|\mu_X - X| \geq \sqrt{n}}  \nonumber \\
+  &= \P{|\mu_X - X| \geq 2n^{1/8} * \frac{n^{3/8}}{2}  } \label{eq:skriv-smart} \\
+  &\leq \P{ |\mu_X - X| \geq 2n^{1/8} \sigma_X } \label{eq:skriv-til-sigma} \\
+  &\leq \frac{1}{\p{2n^{1/8}}^2} \label{eq:brug-chebyshev} \\
+  &\leq \frac{1}{4n^{1/4}} \nonumber \\
+  &= O(n^{-1/4}) \nonumber
 \end{align}
 
-TODO: Skriv mere forklarede tekst til mellemregningerne.
+I \cref{eq:skriv-smart} skriver vi blot $\sqrt{n} = n^{1/2}$ på en smart måde for at kunne bruge $\sigma_X$.\\
+I \cref{eq:skriv-til-sigma} indsætter vi så blot vores $\sigma_X$.\\
+I \cref{eq:brug-chebyshev} bruger vi Chebyshevs ulighed.
