@@ -145,4 +145,8 @@ Regner vi nu videre på \cref{eq:p-simpel} med denne viden får vi:
 
 I \cref{eq:skriv-smart} skriver vi blot $\sqrt{n} = n^{1/2}$ på en smart måde for at kunne bruge $\sigma_X$.\\
 I \cref{eq:skriv-til-sigma} indsætter vi så blot vores $\sigma_X$.\\
-I \cref{eq:brug-chebyshev} bruger vi Chebyshevs ulighed.
+I \cref{eq:brug-chebyshev} bruger vi Chebyshevs ulighed.\\
+
+Herved har vi altså vist, at sandsynligheden for at en fejl af fejltype 1 opstår i første iteration af algoritmen kun er $O(n^{-1/4})$, og at den herved kun laver $2n + o(n)$ sammenligninger ($2n$ fra at bestemme rank af $a$ og $b$ og $o(n)$ fra sorteringen af $R$ og $P$).\\
+
+Beviset for fejltype 2 er symmetrisk. Og fejltype 3 vil vi ikke beskæftige os med.
