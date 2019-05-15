@@ -10,7 +10,7 @@ $$
 \mathbb{P} \Big[X \geq \underbrace{k * \E[X]}_{t} \Big] \leq \frac{1}{k}
 $$
 
-\subsection{Bevis for Markovs ulighed}
+\textit{\textbf{Bevis:}}
 \begin{align}
   \E[X]
   &= \sum_x x \P{X = x} \nonumber \\
@@ -24,11 +24,10 @@ Hvor uligheden i \cref{eq:summer-x-over-t} gælder da vi antager $X \geq 0$ og v
 \subsection{Chebyshevs ulighed}
 Givet en tilfældig variabel $X$ med forventet værdi $\mu_X$, hvor $\sigma_X > 0$ og $t > 0$, så:
 \begin{align}
-  \P{|X - \mu_X| \geq t * \sigma_X} \leq \frac{1}{t^2} \label{eq:chebyshev}
+  \P{|X - \mu_X| \geq t \sigma_X} \leq \frac{1}{t^2} \label{eq:chebyshev}
 \end{align}
 
-\subsection{Bevis for Chebyshevs ulighed}
-
+\textit{\textbf{Bevis:}}
 \begin{align}
   \P{|X - \mu_X| \geq t \sigma_X}
   &= \P{(X - \mu_X)^2 \geq t^2 {\sigma_X}^2} \nonumber \\
@@ -38,3 +37,11 @@ Givet en tilfældig variabel $X$ med forventet værdi $\mu_X$, hvor $\sigma_X > 
 \end{align}
 
 Her benytter vi Markovs ulighed i \cref{eq:bruger-markov} og selve definitionen på varians $\sigma^2$ i \cref{eq:varians-def}.
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.42\textwidth]{chebyshev.pdf}
+  \end{center}
+  \caption{Illustration af Chebyshevs ulighed. Summen af de skraverede områder er $\leq 1/t^2$.}
+  \label{fig:chebyshev}
+\end{figure}
