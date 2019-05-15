@@ -35,7 +35,7 @@ Problemet ved denne tilgang er, at vi skal vælge $t \lg n$ random bits. Hvis vi
 Vælg $a, b \in \curly{0, \dots, n-1}$ uafhængigt og uniformt tilfældigt.\\
 
 Da vi antager $n$ er et primtal, så kan man vise at, for $X_i = (a * i + b) \mod n$ vil $X_i$ og $X_j$ hvor $i \neq j$ være uniformt distribueret i $0, \dots, n-1$ og parvist uafhængige. (Ex 3.7)\\
-\textbf{TODO: Spørg om vi bare kan bruge (Ex 3.7)}
+\textbf{TODO: Spørg om vi bare kan bruge (Ex 3.7) til eksamen}
 
 Med den info, lad $r_i = (a * i + b) \mod n$ for $i = 0, \dots, t-1$.\\
 Igen beregner vi $A(x, r_0), \dots, A(x, r_{t-1})$ og vælger 1 såfremt den optræder bare én gang, ellers 0.\\
@@ -43,9 +43,9 @@ Igen beregner vi $A(x, r_0), \dots, A(x, r_{t-1})$ og vælger 1 såfremt den opt
 Nu bruger vi kun $2 \lg n$ random bits.
 
 \subsection{Sandsynlighed for at algoritme 2 fejler}
-Vi skal bruge, at givet parvis uafhængige stokastiske variable $Y_1, \dots, Y_m$ hvor vi lader $Y = \sum_{i=1}^m Y_i$, da er
+Vi skal ligesom i randomized selection bruge, at givet parvis uafhængige stokastiske variable $Y_1, \dots, Y_m$ hvor vi lader $Y = \sum_{i=1}^m Y_i$, da er
 \begin{align}
-  {\sigma_Y}^2 = \sum_{i=1}^m {\sigma_Y}^2 \label{eq:parvis-uaf}
+  {\sigma_Y}^2 = \sum_{i=1}^m {\sigma_{Y_i}}^2 \label{eq:parvis-uaf}
 \end{align}\vspace{2em}
 
 For $i = 0, \dots, t-1$ lader vi $Y_i = A(x, r_i)$. Lad nu $Y = \sum_{i=1}^{t-1} Y_i$.
@@ -56,11 +56,14 @@ Da kan vi beregne den forventede værdi:
 \end{align}
 Idet vi lader symbolet $p = \P{Y_i = 1} \geq \frac{1}{2}$.\\
 
-Derudover har vi jf. \cref{eq:parvis-uaf}:
+Derudover har vi jf. \cref{eq:parvis-uaf}, at hvis vi bruger samme logik som i \cref{eq:faa-paren} og \cref{eq:paren-to-max}, så får vi:
 \begin{align*}
-  {\sigma_Y}^2 = \sum_{i=0}^{t-1} {\sigma_{Y_i}}^2 \leq \frac{t}{4} \Longrightarrow \sigma_Y = \frac{\sqrt{t}}{2}
+  {\sigma_Y}^2
+  = \sum_{i=0}^{t-1} {\sigma_{Y_i}}^2
+  = \sum_{i=0}^{t-1} p(1-p)
+  \leq \frac{t}{4} \Longrightarrow \sigma_Y
+  = \frac{\sqrt{t}}{2}
 \end{align*}
-\textbf{TODO: Hvorfor har vi ${\sigma_{Y_i}}^2 \leq \frac{1}{4}$?}\\
 
 Da kan vi beregne sandsynligheden for at algoritme 2 fejler til:
 \begin{align}
@@ -71,7 +74,7 @@ Da kan vi beregne sandsynligheden for at algoritme 2 fejler til:
   &\leq \frac{1}{t} \nonumber
 \end{align}
 
-I \cref{eq:p-y-lig-0} bruger vi, at algoritmen fejler når vi får 0 i alle vores trials.\\
+I \cref{eq:p-y-lig-0} bruger vi, at algoritmen fejler (givet vores antagelse at svaret \emph{er} 1) når vi får 0 i alle vores trials.\\
 I \cref{eq:traak-middelvaardi} indsætter vi ulighed \cref{eq:mu-y-ulighed} for $\mu_Y$. Grunden til vi får '$\leq$'-tegnet i denne ligning er pga. vi tager den absolutte værdi, hvorved der kommer ''to muligheder'' for at det udtryk kan være større end brøken, hvilket der ikke gjorde i \cref{eq:mu-y-ulighed}.\\
 I \cref{eq:benyt-cheby} benytter vi Chebyshev's ulighed.\\
 

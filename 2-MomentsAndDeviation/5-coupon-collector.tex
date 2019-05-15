@@ -1,1 +1,65 @@
 \section{The Coupon Collector's Problem}
+Betragt følgende eksperiment. Vi har $n$ unikke unikke kupontyper:
+$$
+\underbrace{\msquare \ \msquare \ \msquare \ \msquare \ \msquare \ \cdots \ \msquare}_{n}
+$$
+
+I hver runde vælges en kupon-type uafhængigt og uniformt tilfældigt. Vi stopper når alle kupon-typer er valgt. Hvor mange runder vil der være i dette eksperiment?\\
+
+For at besvare dette skal vi først definere hvad en epoke er. For $i = 0, \dots, n-1$ består den $i$'te epoke af de runder, der starter lige efter den $i$'te succes og slutter i runden med $(i+1)$'te succes, hvor en succes er defineret som at vælge en kupontype vi ikke har set før. Eksempelvis kunne vi have:
+$$
+\underbrace{C_2,}_{\text{Epoke 0}} \underbrace{C_2, C_1}_{\text{Epoke 1}}, \underbrace{C_2, C_2, C_3}_{\text{Epoke 2}}, \dots
+$$
+
+
+\subsection{Forventet antal runder}
+For $i = 0, \dots, n-1$ lader vi $Y_i$ være længden af epoke $i$. Lad nu $Y = \sum_{i=0}^{n-1} Y_{i}$. Vi har, at sandsynligheden i den $i$'te epoke for at finde en ny kupon er antallet af ufundne kuponer $n-i$ over alle de forskellige kupontyper $n$:
+$$
+p_i = \frac{n-i}{n}
+$$
+
+Bruger vi, at dette er geometrisk distribueret (se evt. \nameref{subsec:geometrisk}) får vi:
+$$
+\mu_{Y_i} = \frac{1}{p_i} = \frac{n}{n-i}
+$$
+
+Da kan vi beregne:
+\begin{align*}
+  \mu_Y
+  = \sum_{i=0}^{n-1} \mu_{Y_i}
+  = \sum_{i=0}^{n-1} \frac{n}{n-i}
+  = n \sum_{i=1}^n \frac{1}{i}
+  = n H_n
+  = n \ln n + \Theta(n)
+  = O(n \ln n)
+\end{align*}
+
+
+\subsection{Sandsynlighed for flere end $r$ runder}
+For $i = 1, \dots, n$ og $r \in \mathbb{N}_0$ defineres følgende begivenhed:\\
+$\event_i^r$: Kupontype $i$ vælges \emph{ikke} i de første $r$ runder.\\
+
+Da er begivenheden at mindst én kupontype ikke vælges i de $r$ første runder $\bigcup_{i=1}^n \event_i^r$. Denne sandsynlighed er naturligvis ækvivalent med sandsynligheden for, at der totalt set vil være flere end $r$ runder før vi er færdig. Da kan vi bestemme sandsynligheden for flere end $r$ runder til:
+\begin{align}
+  \P{\bigcup_{i=1}^n \event_i^r}
+  &\leq \sum_{i=1}^n \P{\event_i^r} \label{eq:bruger-union-bound} \\
+  &= \sum_{i=1}^n \pfrac{n-1}{n}^r \label{eq:sandsynlighed} \\
+  &= \sum_{i=1}^n \p{1 - \frac{1}{n}}^r \nonumber \\
+  &\leq \sum_{i=1}^n \p{e^{-1/n}}^r \label{eq:1plusx}\\
+  &= n e^{-r/n} \nonumber
+\end{align}
+
+Hvor vi i \cref{eq:bruger-union-bound} bruger Union Bound, i \cref{eq:sandsynlighed} har at $\P{\event_i^1} = \frac{n-1}{n}$ hvor det skal ske $r$ gange og i \cref{eq:1plusx} bruger regnereglen $1 + x \leq e^x$ for alle $x \in \R$.
+
+
+\subsubsection{Eksempel på beregning}
+Lad os vælge $r = \beta n \ln n$. Da vil
+$$
+\P{\text{Mere end $r$ runder}} \leq n * e^{- \beta \ln n} = n * n^{- \beta} = n^{1 - \beta}
+$$
+For $\beta = 2$ får vi:
+$$
+\P{\text{Mere end $2 n \ln n$ runder}} \leq \frac{1}{n}
+$$
+
+Altså er sandsynligheden for at laver flere end dobbelt så mange runder som forventet relativt lille.

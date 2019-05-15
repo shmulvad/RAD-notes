@@ -1,4 +1,5 @@
 \section{Appendix} \label{sec:appendix}
+\subsection{Udledning af $O(n^{-2})$} \label{subsec:udledningO}
 Vi kom tidligere frem til, at
 $$
 \P{ \event_i^{\geq k} } \leq \pfrac{e}{k}^k \frac{1}{1 - \frac{e}{k}}
@@ -19,3 +20,31 @@ Dette bevises her (for en passende konstant $c$):
   &= O \p{ n^{-c'} }\\
   &= O(n^{-2})
 \end{align*}
+
+
+
+\subsection{Parvis uafhængighed og varians $\sigma^2$ af sum af stokastiske variable} \label{subsec:parvis}
+\textit{Parvis uafhængighed}\\
+Stokastiske variable $X_1, \dots, X_n$ er parvist uafhængige hvis der for alle $i, j \in \{1, \dots, n \}$ hvor $i \neq j$ og for alle $x, y \in \R$ gælder:
+\begin{align*}
+  \P{X_i = x | X_j = y} &= \P{X_i = x}\\
+  &\Updownarrow\\
+  \P{X_i = x \land X_j = y} &= \P{X_i = x} * \P{X_j = y}
+\end{align*}
+
+\textit{Varians $\sigma^2$ af sum $X$ af stokastiske variable $X_i$}\\
+Givet (parvist) uafhængige stokastiske variable $X_1, \dots, X_n$ hvor vi lader $X = \sum_{i=1}^n X_i$, da er
+$$
+\sigma_X^2 = \sum_{i=1}^n {\sigma_{X_i}}^2
+$$
+
+\textit{Varians af Bernoulli trials}\\
+Lad os definere $\P{X_i = 1} = p$. Siden de stokastiske variable $X_i$ er Bernoulli trials, så ved vi, at de har variansen ${\sigma_{X_i}}^2 = p(1-p)$. Se evt. simpel udledning på \href{https://en.wikipedia.org/wiki/Bernoulli_distribution#Variance}{Wikipedia}.
+
+
+\subsection{Geometrisk distribution} \label{subsec:geometrisk}
+Givet vi har et eksperiment, hvor sandsynligheden for succes er $p$ og vi udfører dette eksperiment $X$ gange indtil vi observerer vores første succes, hvorefter vi stopper, da er
+$$
+\mu_X = \frac{1}{p}
+$$
+Et eksempel herpå kunne f.eks. være at lave møntkast indtil man observer HEADS første gang, hvor vi med en fair coin får $\mu_X = 1/(1/2) = 2$.

@@ -11,7 +11,7 @@
 \usepackage{url}
 \usepackage[left=2cm,top=2cm,bottom=1.5cm,right=2cm]{geometry}
 \usepackage{amsmath}
-\usepackage{amssymb}
+\usepackage{scalerel,amssymb}
 \usepackage{amsthm}
 \usepackage{wrapfig}
 \usepackage{fixme}
@@ -95,5 +95,8 @@
 \newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
 
 \renewcommand{\P}[1]{\mathbb{P} \square{ #1 } }
+
+\def\mcirc{\mathbin{\scalerel*{\bigcirc}{t}}}
+\def\msquare{\mathord{\scalerel*{\Box}{gX}}}
 
 \author{Søren Mulvad, rbn601}
