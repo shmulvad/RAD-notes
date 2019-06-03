@@ -74,7 +74,6 @@
 \newcommand{\longspace}{{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
 % \renewcommand{\P}{{\mathbb P}}
 \newcommand{\R}{{\mathbb R}}
-\newcommand{\E}{{\mathbb E}}
 \newcommand{\event}{{\mathcal{E}}}
 \newcommand{\parfrac}[1]{\frac{\partial}{\partial #1}}
 \renewcommand{\num}{{\textrm{num} }}
@@ -95,8 +94,12 @@
 \newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
 
 \renewcommand{\P}[1]{\mathbb{P} \square{ #1 } }
+\newcommand{\E}[1]{\mathbb{E} \square{ #1 } }
 
 \def\mcirc{\mathbin{\scalerel*{\bigcirc}{t}}}
 \def\msquare{\mathord{\scalerel*{\Box}{gX}}}
+
+% To allow for curly brackets to the right of vectors
+\newcommand{\noleftdelimiter}{\left.\kern-\nulldelimiterspace}
 
 \author{Søren Mulvad, rbn601}
