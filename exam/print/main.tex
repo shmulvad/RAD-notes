@@ -1,0 +1,22 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage{pdfpages}
+
+% Alle dispositions-forsider to gange (en til mig + en til eksaminator) samt alle fulde dispositioner én gang:
+\newcommand{\rad}[1]{
+	\includepdf[pages=1]{../#1.pdf}
+	\includepdf[pages=1]{../#1.pdf}
+	\includepdf[pages=-]{../#1.pdf}
+}
+
+
+% Det at tilføje et dokument i køen til at blive printet på KU er lidt irriterende, så det er nemmest blot at lave ét samlet pdf-dokument. Dette samler alle dispositionerne til ét dokument.
+\begin{document}
+\rad{1Kap1/kap1}
+\rad{2Kap3/kap3}
+\rad{3Kap4/kap4}
+\rad{4HashTables/hash}
+\rad{5DistinctElms/disElms}
+\rad{6HeavyHitters/heavyHitters}
+\rad{7SecondMoment/secondMoment}
+\rad{8AlgebraicTechniques/algTech}
+\end{document}

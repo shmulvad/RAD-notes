@@ -1,0 +1,107 @@
+\documentclass[a4paper,11pt]{article}
+% Various packages
+\usepackage{siunitx}
+\usepackage[utf8]{inputenc} % æøå
+\usepackage[T1]{fontenc} % mere æøå
+\usepackage[danish]{babel} % orddeling
+\usepackage{verbatim} % så man kan skrive ren tekst
+\usepackage{graphicx}
+\graphicspath{{assets/}}
+\usepackage{a4wide}
+\usepackage{url}
+\usepackage[left=2cm,top=2cm,bottom=1.5cm,right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{wrapfig}
+\usepackage{fixme}
+\usepackage{color}
+\usepackage[makeroom]{cancel}
+\usepackage{pstricks}
+\usepackage{pdfpages} % include pdf
+\usepackage{float} % Use [H] in figures
+\usepackage{subcaption} % For subfigures
+\usepackage{color} % May be necessary if you want to color links
+\usepackage{hyperref} % Make references clickable
+\usepackage[nameinlink,capitalize]{cleveref} % Make eq:refs be in style (1)
+\usepackage[linesnumbered, commentsnumbered, lined, ruled, vlined,
+%noend  % Have no ⌊-like symbol to indicate end of scope in pseudocode
+]{algorithm2e} % Doc: https://goo.gl/6bC1qZ
+
+\crefname{equation}{}{Equations}
+
+\setcounter{secnumdepth}{-2}
+
+% Ændr på navnene der vises når man bruger \autoref{label}
+\def\sectionautorefname{Sektion}
+\renewcommand{\equationautorefname}{Ligning}
+\def\figureautorefname{Figur}
+\AtBeginDocument{\renewcommand{\ref}[1]{\autoref{#1}}}
+
+% Sæt \ref{} til at kalde \autoref{}
+\AtBeginDocument{\renewcommand{\ref}[1]{\autoref{#1}}}
+
+% Ændr ''*'' i math-felter til \cdot
+\DeclareMathSymbol{*}{\mathbin}{symbols}{"01}
+
+% Sæt farver for interne referencer og links
+\definecolor{darkblue}{RGB}{25,25,112}
+\hypersetup{
+	colorlinks=true,    %set true if you want colored links
+	linktoc=all,        %set to all if you want both sections and subsections linked
+	linkcolor=darkblue, %choose some color if you want links to stand out
+	filecolor=blue,     %
+	citecolor=black,    %
+	urlcolor=cyan,      %
+}
+
+% Set indentation to 0:
+\setlength\parindent{0pt}
+
+
+\newcommand{\TODO}[1]{{\color{red} \textbf{TODO:} #1}}
+
+% Keywords relateret til algorithm2e pakken
+\newcommand{\True}{\textbf{true}}\newcommand{\False}{\textbf{false}}
+\SetStartEndCondition{ }{}{}%
+\SetKwProg{Fn}{def}{\string:}{}
+\SetKw{KwTo}{to}
+\SetKwFor{For}{for}{}{}%
+\SetKwFor{ForEach}{foreach}{}{}%
+\SetKwIF{If}{ElseIf}{Else}{if}{}{elif}{else}{end}%
+\SetKwFor{While}{while}{}{end}\SetKwProg{Fn}{}{}{}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\setlength{\algomargin}{3em}\DontPrintSemicolon
+
+\newcommand{\longspace}{{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
+\newcommand{\R}{{\mathbb R}}
+\newcommand{\event}{{\mathcal{E}}}
+\newcommand{\ift}{{\textrm{if } }}
+
+% Dynamiske (), <>, ceil, floor
+\newcommand{\p}[1]{\left( #1 \right)}
+\newcommand{\pbig}[1]{\big( #1 \big)}
+\newcommand{\pBig}[1]{\Big( #1 \Big)}
+\newcommand{\pbigg}[1]{\bigg( #1 \bigg)}
+\newcommand{\curly}[1]{\left\{ #1 \right\}}
+\renewcommand{\square}[1]{\left[ #1 \right]}
+\newcommand{\larr}[1]{\left< #1 \right>}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+
+% Probability and expected value with dynamic []
+\renewcommand{\P}[1]{\mathbb{P} \square{ #1 } }
+\newcommand{\E}[1]{\mathbb{E} \square{ #1 } }
+
+% A fraction, but with dynamic () around
+\newcommand{\pfrac}[2]{ \p{ \frac{#1}{#2} } }
+
+% Circle and square icons
+\def\mcirc{\mathbin{\scalerel*{\bigcirc}{t}}}
+\def\msquare{\mathord{\scalerel*{\Box}{gX}}}
+
+% To allow for curly brackets to the right of vectors
+\newcommand{\noleftdelimiter}{\left.\kern-\nulldelimiterspace}
+
+\author{Søren Mulvad, rbn601}

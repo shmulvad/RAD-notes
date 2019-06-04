@@ -20,5 +20,15 @@ master.pdf
 output.pdf
 primary.pdf
 
+# Exam pdfs
+kap1.pdf
+kap3.pdf
+kap4.pdf
+hash.pdf
+disElms.pdf
+heavyHitters.pdf
+secondMoment.pdf
+algTech.pdf
+
 # Sketch files
 *.sketch

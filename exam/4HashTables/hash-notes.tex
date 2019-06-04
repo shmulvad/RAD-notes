@@ -1,0 +1,143 @@
+\subsection{Datastruktur og anvendelse}
+Fuldt tilfældig
+$$
+  h: U \rightarrow [m] = \{ 0, \dots, m-1 \}
+$$
+
+Alle $|U|$ hashværdier uafhængige og uniforme. Tager $|U|$ plads.
+
+I stedet kun element af tilfældighed. Vælg et primtal $p$ så $U \subseteq [p] = \mathbb Z_p$ samt tilfældige $a, b \in [p]$.
+
+\begin{align*}
+  h_{a, b}(x)   &= (ax + b) \bmod p\\
+  h_{a, b}^m(x) &= h_{a, b} \bmod m
+\end{align*}
+
+
+Ved universel hashing har vi
+$$
+h : U \rightarrow [m]
+$$
+
+For $x, y \in U$ hvor $x \neq y$, da
+$$
+\P{h(x) = h(y)} \leq \frac{1}{m}
+$$
+
+Theorem: Hvis $a \in [p]_+ = \{1, \dots, p-1 \}, b \in [p]$ er uniforme og uafhængige så er $h_{a, b}(x)$ universel.
+
+Theorem: Hvis $U = [2^w], w = 8, 16, 32, \dots$ og $m = 2^l$ og $a \in [2^w]$ er et tilfældigt ulige tal, så:
+$$
+h_a(x) = (a*x) >> (w - l)
+$$
+
+
+\subsection{Anvendelse}
+
+Hash tabel med lister/kæder (dictionary). Lad os sige vi har en liste $S$ med $|S| = n$ nøgle/værdi-par.\\
+
+Da kan vi gemme dem i vores dictionary med $O(n)$ plads og $O(1)$ forventet indsættelse og sletning.\\
+
+Vi laver et array $L$ der er $m$ langt med lister. Så har vi en universel hash $h : U \rightarrow [m], m \geq n$.\\
+
+Nu lader vi $L[i]$ være en liste over $S_i = \{ x \in S | h(x) = i \}$\\
+
+Dvs. $x \in S \Longleftrightarrow x$ ligger i $L[h(x)]$.
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.6\textwidth]{dict.pdf}
+  \end{center}
+  \caption{Hash tabel med chaining}
+  \label{fig:hash}
+\end{figure}
+
+Herved får vi, at:
+$$
+| \, L[h(x)] \, | = \sum_{y \in S} [h(y) = h(x)]
+$$
+
+\subsection{Forventet køretid for indsættelse}
+Tiden det tager at finde ud af om $x \in U$ er i $S$ er proportional med listens længde, $O(1 + | \, L[h(x)] \, |)$.\\
+
+Antag nu, at $x \notin S$, $h$ er universel, $m \geq n$ og lad $I(y)$ være en indikator-variabel som er $1$ hvis $h(x) = h(y)$ og $0$ ellers. Da er det forventede antal elementer i $L[h(x)]$:
+
+\begin{align}
+  \E{ \, |L[h(x)]| \, }
+  &= \E{ \sum_{y \in S} I(y)} \label{eq:indi} \\
+  &= \sum_{y \in S} \E{I(y)} \label{eq:lin-of-exp} \\
+  &= \sum_{y \in S} \P{h(y) = h(x)} \nonumber \\
+  &\leq \sum_{y \in S} \frac{1}{m} \label{eq:1-over-m} \\
+  &= n/m \label{eq:n-over-m} \\
+  &\leq 1 \nonumber
+\end{align}
+
+I \cref{eq:indi} bruger vi, at antallet af elementer i listen $L[h(x)]$ må være alle dem som hasher til værdi, altså $h(y) = h(x)$.\\
+I \cref{eq:lin-of-exp} bruger vi Linearity of Expectation.\\
+I \cref{eq:1-over-m} benytter vi vores antagelse om at vores hashing function er universel, hvorved uligheden gælder.\\
+I \cref{eq:n-over-m} benytter vi, at der i alt er $n$ elementer i $S$.
+
+
+\subsection{c-universel hashing}
+
+For $x, y \in U, x \neq y$, da er $\P{h(x) = h(y)} \leq \frac{c}{m}$.\\
+
+Theorem: Hvis $a \in [p]_+ = \{1, \dots, p-1 \}$ og $b \in [p]$ er uniforme og uafhængige, så er $h_{a,b}(x)$ 1-universel.\\
+
+Theorem: Hvis $U = [2^w], w = \{8, 16, 32, 64, \dots \}$ og $m = 2^l$ og $a \in [2^w]$ er tilfældig ulige, så er $h_a(x) = (a*x) >> (w-l)$ 2-universel.
+
+
+\subsection{Konstant query-tid for mængde $S$}
+Givet en mængde $S$, da ønsker vi at opnå konstant query tid. Det opnås f.eks. hvis $|S_i| \leq 1$ for alle $i$ hvilket vil sige der er 0 kollisioner for alle $x, y \in S$ hvor $x \neq y$.
+
+Lad os nu definere $C_h$ til at betegne antal kollisioner $h(x) = h(y)$ for alle $x, y \in S$ hvor $x \neq y$. Lad os nu beregne den forventede værdi af $C_h$:
+
+\begin{align}
+  \E{C_h} &< \binom{n}{2} \frac{1}{m} = \frac{n(n-1)}{2m}
+\end{align}
+
+
+Da får vi:
+$$
+\P{C_h \geq \frac{n(n-1)}{m}} \leq \frac{\E{C_h}}{n(n-1)/m} = \frac{1}{2}
+$$
+
+Hvis $C_h$ bliver for stort prøver vi med et nyt $h$. Herved kan vi i alt forvente 2 forsøg.
+
+Lad os prøve at udføre dette med $m = n^2$. Da:
+$$
+C_h < \frac{n(n-1)}{m} < 1 \Longrightarrow C_h = 0
+$$
+
+
+
+\subsection{2 level hashing - Pladsforbrug}
+
+Først $m = n$ og får $C_h < \frac{n(n-1)}{m} = n-1$. For hvert $i$, gem $S_i$ med $m_i = n_i^2$ hvor $n_i = |S_i|$.
+
+Vi kan da beregne pladsforbruget til:
+
+\begin{align}
+  O \p{ 1 + n +m + \sum_{i \in [m]} \p{ 1 + n_i + m_i }   }
+  &= O \p{ n + \sum_{i \in [m]} \p{ 1 + n_i + n_i^2 }  }\\
+  &= O \p{ n + \sum_{i \in [m]} \p{ 2 n_i + n_i ( n_i - 1) }  }\\
+  &= O \p{ n + 2 \sum_{i \in [m]} \binom{n_i}{2} }\\
+  &= O(n + C_h)\\
+  &= O(n)
+\end{align}
+
+\subsection{Stærk $c$-universel}
+
+For alle $x \neq y$ hvor $x, y \in U$ og $q, v \in [m]$, da er:
+
+\begin{align}
+  &\P{h(x) = q \text{ og } h(y) = v} = \frac{1}{m^2}\\
+  &\Updownarrow \\
+  (1) &\text{ $h(z)$ uniform i $[m]$} \Longrightarrow \P{h(x) = s} \leq \frac{c}{m}\\
+  (2) &\text{ $h(x)$ og $h(y)$ er uafhængig}
+\end{align}
+
+Andet gøgl på tavlen:
+$$
+\P{h(x) = h(y)} \geq \sum_{q \in [m]} \P{h(x) = h(y) = q}
+$$

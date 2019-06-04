@@ -1,0 +1,110 @@
+\input{../preamble.tex}
+\title{Eksamensdisposition - Hash tables}
+
+\begin{document}
+\maketitle
+
+\begin{itemize}
+  \item \textbf{Redegørelse for datastruktur og anvendelse}
+  \item \textbf{Bestemmelse af forventet køretid for indsættelse/sletning}
+  \item \textbf{Opbygning af hash table der altid sikrer konstant opslagstid}
+  \item \textbf{Bestemmelse af pladsforbrug for 2-level hashing}
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Eksamensdisposition - Hash tables}
+\subsection{Redegørelse for datastruktur og anvendelse}
+Vi bestemmer en hashfunktion $h$ der mapper et univers $U$ til sættet af tal $[m]$:
+$$
+  h : U \rightarrow [m] = \{0, \dots, m-1 \}
+$$
+
+For en $c$-universel hashing gælder, at for $x, y \in U$ hvor $x \neq y$, da:
+$$
+\P{h(x) = h(y)} \leq \frac{c}{m}
+$$
+
+Hashing funktioner benyttes særligt ofte i det man typisk kalder dictionaries. Lad os sige vi har en liste $S$ med $n = |S|$ nøgle/værdi-par. Så laver et array $L$ der er $m \geq n$ langt med lister og laver en hashing funktion $h : U \rightarrow [m]$.
+
+Så vil $L[i]$ bestå af alle de elementer hvis nøgle hashes til dette index:
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.6\textwidth]{dict.pdf}
+  \end{center}
+  \caption{Hash tabel med chaining}
+  \label{fig:hash}
+\end{figure}
+
+
+\subsection{Bestemmelse af forventet køretid for indsættelse/sletning}
+
+\TODO{Lav denne del}
+
+
+\subsection{Opbygning af dictionary der altid sikrer konstant opslagstid}
+Antag vi har en universel hash funktion $h : U \rightarrow [m]$. hvor $m \geq 1$ er et heltal vi vælger senere. For ethvert $i \in [m]$, definer $S_i = \{ x \in S | h(x) = i \}$ og $n_i = |S_i|$. For ethvert sæt $S_i$ er køretiden $O(1)$ hvis det er tomt eller kun indeholder et element. Men hvis mange elementer hasher til samme index vil det tage lang tid.\\
+
+Lad os definere $C_h = \sum_{i \in [m]} \binom{n_i}{2}$ som er det totale antal par af nøgler i $S$ der kolliderer med hashfunktionen $h$. Vi ønsker en hashfunktion så $C_h = 0$, hvorved der for alle sæt $S_i$ gælder de er tomme eller kun indeholder ét element.\\
+
+Vi har pr. definition af $C_h$ følgende, hvor $[h(x) = h(y)]$ svarer til en indikatorvariabel der er 1 hvis udsagnet er sandt, ellers 0:
+\begin{align}
+  C_h = \sum_{\mathclap{\substack{ \{x, y\} \in S\\ x \neq y}}} \ [h(x) = h(y)]
+\end{align}
+
+Da vi antager $h$ er universel har vi, at $\E{h(x) = h(y)} \leq 1/m$ når $x \neq y$:
+\begin{align}
+  \E{C_h}
+  &= \E{ \ \ \sum_{\mathclap{\substack{ \{x, y\} \in S\\ x \neq y}}} \ h(x) = h(y)} \nonumber \\
+  &= \sum_{\mathclap{\substack{ \{x, y\} \in S\\ x \neq y}}} \ \E{h(x) = h(y)} \label{eq:lin-of-expp} \\
+  &\leq \binom{n}{2} * \frac{1}{m} \label{eq:n-choose-2} \\
+  &= \frac{n!}{2!(n-2)!} * \frac{1}{m} \nonumber \\
+  &= \frac{1}{2m} * \frac{n!}{(n-2)!} \nonumber \\
+  &= \frac{n(n-1)}{2m} \label{eq:binom-to-frac}
+\end{align}
+
+I \cref{eq:lin-of-expp} bruger vi linearity of expectation.\\
+I \cref{eq:n-choose-2} har vi $\binom{n}{2}$ da $n = |S|$ og vi vælger to elementer. Forventningen $1/m$ er givet jf. vores antagelse.\\
+Frem til \cref{eq:binom-to-frac} er det simpel købmandsregning.\\
+
+
+Nu kan vi bestemme:
+\begin{align}
+  \P{C_h > n(n-1)/m}
+  &\leq \P{C_h \geq 2 \E{C_h}} \label{eq:1-til-2E} \\
+  &\leq \frac{\E{C_h}}{2 \E{C_h}} \label{eq:benyt-markov} \\
+  &= \frac{1}{2} \nonumber
+\end{align}
+
+I \cref{eq:1-til-2E} får vi uligheden i selve ligningen da uligheden i højre sandsynlighed gør den kan ske én gang oftere, mens vi i \cref{eq:benyt-markov} benytter vi Markovs ulighed.\\
+
+Hvis vi vælger en ny hashfunktion $h$ hver gang $C_h > n(n-1)/m$ vil det forventede antal gange vi skal gøre det være højest $2$, da det er geometrisk distribueret.\\
+
+
+Hvis vi i stedet vælger $m = n^2$ vil det forventede antal hashfunktioner $h$ vi skal prøve før vi får $C_h = 0$ være højest 2. Det ser vi ved at indsætte $m = n^2$. Da får vi:
+$$
+C_h \leq \frac{n(n-1)}{n^2} < 1
+\quad\quad \rightarrow \quad\quad
+C_h = 0
+$$
+efter forventet højest 2 forsøg. Det gælder da vi kun arbejder med heltal.\\
+
+Med denne metode får vi altså en dictionary med 0 kollisioner, og derved $O(1)$ opslagstid, men til gengæld bruger vi $\Theta(n^2)$ plads.
+
+
+\subsection{Bestemmelse af pladsforbrug for 2-level hashing}
+Lad os nu vælge $m = n$. Nu kan vi finde en hash funktion $h$ så $C_h \leq n$ i forventet højest 2 forsøg (da $C_h \leq \frac{n(n-1)}{n} < n$ jf. hvad vi viste lige før).\\
+
+Det andet niveau består af en 1-level hash tabel for hvert $S_i$ hvor $|S_i| = n_i \geq 1$. Så for hvert $i \in [n]$ hvor $n_i \geq 1$ lad $h_i : U \rightarrow [m_i]$ være en universel hashfunktion hvor vi definerer $m_i = n_i^2$. Hvis der sker nogle kollisioner prøver vi igen med en ny $h_i$.
+
+
+%\newpage
+%\input{hash-notes.tex}
+
+\end{document}
