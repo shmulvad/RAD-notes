@@ -110,6 +110,7 @@ Hvor vi i \cref{eq:parvis-uaf} bruger den parvise uafhængighed der følger af a
 
 Lad os nu definere $\hat d$ til at være estimatet af $d$ som algoritmen returnerer, hvorved vi har $\hat d = 2^{t + \frac{1}{2}}$.
 
+\subsubsection{For højt estimat $\hat d$}
 Vi lader nu $a$ være det mindste heltal så $2^{a + \frac{1}{2}} \geq 6d$. Så får vi:
 \begin{align}
   \P{\hat d \geq 6d}
@@ -123,8 +124,11 @@ Vi lader nu $a$ være det mindste heltal så $2^{a + \frac{1}{2}} \geq 6d$. Så 
 I \cref{eq:t-stoerre-a} benytter vi værdien for $\hat d$ og vores definition på $a$.\\
 I \cref{eq:benyt-ulighed} benytter vi $t \geq r \Longleftrightarrow Y_r > 0$ fra \cref{eq:t-greater-eq-r}.\\
 I \cref{eq:benyt-markov} bruger vi Markovs ulighed.\\
-I \cref{eq:benyt-forventet-yr} benytter vi vores værdi for $\E{Y_r}$. Man får herefter en talværdi mindre end $1/4$ såfremt man indsatte $a$.\\\\
+I \cref{eq:benyt-forventet-yr} benytter vi vores værdi for $\E{Y_r}$. Man får herefter en talværdi mindre end $1/4$ såfremt man indsatte $a$.
 
+
+
+\subsubsection{For lavt estimat $\hat d$}
 Lad os tilsvarende kigge på sandsynligheden for at vi får noget for småt. Lad $b$ være det største heltal så $2^{b + \frac{1}{2}} \leq d/6$. Da får vi:
 \begin{align}
   \P{\hat d \leq d/6}
