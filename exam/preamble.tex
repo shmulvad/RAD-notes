@@ -74,6 +74,10 @@
 \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
 \setlength{\algomargin}{3em}\DontPrintSemicolon
 
+% No line number hack
+\let\oldnl\nl% Store \nl in \oldnl
+\newcommand{\nonl}{\renewcommand{\nl}{\let\nl\oldnl}}% Remove line number for one line
+
 \newcommand{\longspace}{{\ \ \ \ \ \ \ \ \ \ \ \ \ \ }}
 \newcommand{\R}{{\mathbb R}}
 \newcommand{\event}{{\mathcal{E}}}
@@ -93,6 +97,7 @@
 % Probability and expected value with dynamic []
 \renewcommand{\P}[1]{\mathbb{P} \square{ #1 } }
 \newcommand{\E}[1]{\mathbb{E} \square{ #1 } }
+\newcommand{\Var}[1]{\text{Var} \square{ #1 } }
 
 % A fraction, but with dynamic () around
 \newcommand{\pfrac}[2]{ \p{ \frac{#1}{#2} } }

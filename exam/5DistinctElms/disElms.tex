@@ -4,6 +4,16 @@
 \begin{document}
 \maketitle
 
+\begin{itemize}
+  \item \textbf{Problem}
+  \item \textbf{AMS algoritmen}
+  \item \textbf{Analyse af sandsynlighed for fejlafvigelse}
+  \begin{itemize}
+    \item For højt estimat $\hat d$
+    \item For lavt estimat $\hat d$
+  \end{itemize}
+  \item \textbf{Median tricket}
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -15,9 +25,188 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Eksamensdisposition - Distinct Elements}
 
+% Sektion 2 og 3
+% Bemærk at det de kalder "2-universal" er det som vi kalder "strong universal" eller "2independent." I section 2 gennemgik vi ikke brugen af funktionen g, men nøjedes med at gemme elementerne fra strømmen direkte i B.
 
 
+\subsection{Problem}
+Vi lader en strøm $j_1, \dots, j_s \in [n]$ passere. Da lader vi $f_j$ betegne antal forekomster af $j$ i strømmen, svarende til antal elementer $\{i | j_i = j \}$.\\
 
+Nu ønsker vi at give et estimat på $d$, som beskriver hvor mange forskellige elementer der var i strømmen, hvor
+$$
+S = \{j | f_j > 0 \}, \longspace d = |S|
+$$
+
+\subsection{AMS algoritmen}
+
+Vi definerer nu for et heltal $y > 0$ funktionen zeros$(y)$ til at være antal trailing 0'er i bit-formen af $y$, som formelt er
+$$
+\text{zeros}(y) = \max\{i : y \bmod 2^i = 0\}
+$$
+F.eks. vil $y = 288_{10}$ give $\text{zeros}(y) = 1001 \underbrace{00000}_{zeros} = 5$ og vi ser $y \bmod 2^5 = 0$ mens $y \bmod 2^6 \neq 0$.\\
+
+
+\begin{algorithm}[H] \caption{AMS} \label{alg:ams}
+  \SetKwFunction{zeros}{zeros}%
+	%\BlankLine
+  \nonl Init\;
+  $h =$ new random strong-universel hash function s.t. $h : [n] \rightarrow [n]$\;
+  $z = 0$\;
+  \nonl Process $j$\;
+  \If{$\zeros{h(j)} > z$}{
+    $z = \zeros{h(j)}$\;
+  }
+  \Return $\hat d = 2^{z + 1/2}$
+\end{algorithm}\vspace{1em}
+
+Hvor Process $j$ svarer til vi løbende kører alle $j$'er i strømmen igennem i linje 3, hvor vi potentielt kunne stoppe på et vilkårligt tidspunkt.\\
+
+Intuitionen for algoritmen er, at vi forventer 1 ud af de $d$ unikke elementer hashes så \texttt{zeros}$(h(j)) \geq \log d$, og vi forventer ikke nogle elementer at ramme \texttt{zeros}$(h(j)) \gg \log d$. Derfor vil maksværdien af \texttt{zeros}$(h(j))$ være en god approksimation af $\log d$.
+
+
+\subsection{Analyse af sandsynlighed for fejlafvigelse}
+
+For ethvert $j \in [n]$ og ethvert heltal $r \geq 0$, definer da begivenheden:\\
+$\event_{r,j}$: \texttt{zeros}$(h(j)) \geq r$\\
+
+Lad nu $X_{r,j}$ være en indikatorvariabel som er 1 hvis $\event_{r,j}$ er sand, 0 ellers. Lad $Y_r$ være en stokastisk variabel for et givent $r$ som beskriver antal elementer $j$ der både indgår i strømmen og opfylder $\event_{r,j}$:
+\begin{align}
+  Y_r = \sum_{j: f_j > 0} X_{r,j} \label{eq:yr-def}
+\end{align}
+
+Lad $t$ beskrive værdien af $z$ idet algoritmen terminerer. Så har vi følgende:
+\begin{align}
+  t \geq r \quad \Longleftrightarrow \quad Y_r > 0  \label{eq:t-greater-eq-r}
+\end{align}
+Idet der minimum har været et element der opfyldte $\event_{r,j}$.\\
+
+Vi kan også omskrive det til, at såfremt intet element opfyldte $\event_{r,j}$ har vi:
+\begin{align}
+  t \leq r - 1 \quad \Longleftrightarrow \quad Y_r = 0 \label{eq:t-leq-r}
+\end{align}
+
+Siden $h(j)$ er uniformt distribueret over $(\lg n)$-bitstrengene har vi:
+$$
+\E{X_{r,j}} = \P{\mathtt{zeros}(h(j)) \geq r} = \P{h(j) \bmod 2^r = 0} = \frac{1}{2^r}
+$$
+
+Vi kan nu bestemme forventning $Y_r$ som følger, idet vi bruger linearity of expectation på \cref{eq:yr-def} og vi har defineret $d$ til at være antal unikke elementer:
+\begin{align}
+  \E{Y_r} = \sum_{j: f_j > 0} \E{X_{r,j}} = \frac{d}{2^r}
+\end{align}
+
+
+Variansen fås til:
+\begin{align}
+  \Var{Y_r}
+  &= \sum_{j: f_j > 0} \Var{X_{r,j}} \label{eq:parvis-uaf} \\
+  &= \sum_{j: f_j > 0} \E{X_{r,j}^2} - \E{X_{r,j}}^2 \label{eq:var-def} \\
+  &\leq \sum_{j: f_j > 0} \E{X_{r,j}^2} \nonumber \\
+  &= \sum_{j: f_j > 0} \E{X_{r,j}} \label{eq:indi-var} \\
+  &= \frac{d}{2^r} \nonumber
+\end{align}
+
+Hvor vi i \cref{eq:parvis-uaf} bruger den parvise uafhængighed der følger af at vi valgte en stærk universel hashing-funktion, i \cref{eq:var-def} bruger definitionen på varians og i \cref{eq:indi-var} bruger at de er indikator-variabler.\\
+
+Lad os nu definere $\hat d$ til at være estimatet af $d$ som algoritmen returnerer, hvorved vi har $\hat d = 2^{t + \frac{1}{2}}$.
+
+Vi lader nu $a$ være det mindste heltal så $2^{a + \frac{1}{2}} \geq 6d$. Så får vi:
+\begin{align}
+  \P{\hat d \geq 6d}
+  &= \P{t \geq a} \label{eq:t-stoerre-a} \\
+  &= \P{Y_a > 0} \label{eq:benyt-ulighed} \\
+  &= \P{Y_a \geq 1} \nonumber \\
+  &= \frac{\E{Y_r}}{1} \label{eq:benyt-markov} \\
+  &\leq \frac{d}{2^a} < \frac{1}{4} \label{eq:benyt-forventet-yr}
+\end{align}
+
+I \cref{eq:t-stoerre-a} benytter vi værdien for $\hat d$ og vores definition på $a$.\\
+I \cref{eq:benyt-ulighed} benytter vi $t \geq r \Longleftrightarrow Y_r > 0$ fra \cref{eq:t-greater-eq-r}.\\
+I \cref{eq:benyt-markov} bruger vi Markovs ulighed.\\
+I \cref{eq:benyt-forventet-yr} benytter vi vores værdi for $\E{Y_r}$. Man får herefter en talværdi mindre end $1/4$ såfremt man indsatte $a$.\\\\
+
+Lad os tilsvarende kigge på sandsynligheden for at vi får noget for småt. Lad $b$ være det største heltal så $2^{b + \frac{1}{2}} \leq d/6$. Da får vi:
+\begin{align}
+  \P{\hat d \leq d/6}
+  &= \P{t \leq b} \label{eq:benyt-d-og-b} \\
+  &= \P{Y_{b+1} = 0}
+  = \P{ |Y_{b+1} - \E{Y_{b+1}}| \geq \E{Y_{b+1}} } \label{eq:benyt-t-mindre-b} \\
+  &\leq \frac{\Var{Y_{b+1}}}{ \E{Y_{b+1}}^2 }
+  = \frac{1}{\E{Y_{b+1}}}
+  \leq \frac{2^{b+1}}{d} \label{eq:benyt-chebyshev}
+  < \frac{1}{4}
+\end{align}
+
+I \cref{eq:benyt-d-og-b} benytter vi vores værdier for $\hat d$ og $b$.\\
+I \cref{eq:benyt-t-mindre-b} benytter vi $t \leq r \Longleftrightarrow Y_b = 0$ fra \cref{eq:t-leq-r}.\\
+I \cref{eq:benyt-chebyshev} benytter vi Chebyshevs ulighed og at $\Var{Y_r} = \E{Y_r}$.\\
+
+Vi ser at garantierne er relativt små. Det ses både ved at $\hat d$ kan afvige med en del og at vores sandsynligheder kun er begrænset af omkring 25 \%.
+
+\subsection{Median tricket}
+Lav nu $k$ uafhængige estimater $\hat d_0, \dots, \hat d_{k-1}$ i parallel (ved at bruge forskellige hashfunktioner) og returner medianen $\hat d_{(\ceil{k/2})}$ af de $k$ svar.\\
+
+
+Lad $Z_i = [\hat d_i \geq t]$ og definer $Z$ til
+$$
+Z = \sum_{i \in [k]} Z_i
+$$
+
+Hvis vi bruger $t = 6d$ får vi:
+$$
+  \E{Z} = \sum_{i \in [k]} \P{Z_i} \leq k * 1/4 = k/4
+$$
+
+Da får vi
+\begin{align}
+  \P{\hat d_{(\ceil{k/2})} > t}
+  = \P{Z > \ceil{k/2}}
+  = \P{Z \geq 2 \E{Z}}
+  \leq e^{- \mu / 3}
+  = e^{- k / 12}
+\end{align}
+
+Herved har vi altså væsentligt begrænset sandsynligheden for at få noget rimelig forkert.
+
+
+% Gad ikke lære BJKST-algoritmen og beviserne hertil udenad, men var småt begyndt. Udkommenteret for nu.
+
+% \subsection{BJKST algoritmen}
+% Samme setup som før med en strøm og problem vi ønsker at løse. Nu har vi følgende algoritme:
+% \begin{algorithm}[H] \caption{BJKST} \label{alg:bjkst}
+%   \SetKwFunction{zeros}{zeros}%
+% 	%\BlankLine
+%   \nonl Init\;
+%   $h =$ new random strong-universel hash function s.t. $h : [n] \rightarrow [n]$\;
+%   $z = 0$\;
+%   $B = \emptyset$\;
+%   \nonl Process $j$\;
+%   \If{$\zeros{h(j)} \geq z$}{
+%     $B = B \cup \{ j \}$\;
+%   }
+%   \While{$|B| > k$}{
+%     remove all $i \in B$ where $\zeros{h(i)} = z$\;
+%     $z += 1$\;
+%   }
+%   \nonl Output\;
+%   \Return $\hat d = |B|2^z$
+% \end{algorithm}\vspace{1em}
+
+% Vi ser at $B$ er sættet af alle $j$ hvor \texttt{zeros}$(h(j)) \geq z$. Ud af de $d$ unikke elementer i strømmen vil vi forvente at $d/2^z$ falder ind i dette sæt. Derfor vil vores return-værdi være et fint estimat.\\
+
+% Definer nu $k = c / \epsilon^2$, hvor $c$ vælges senere.
+
+
+% Lad os definere at en fejl-begivenhed sker når $\hat d$ ikke er en $(1 + \pm \epsilon)$-approksimation af $d$:
+% \begin{align}
+%   \mathtt{FAIL}
+%   \Longleftrightarrow
+%   | \hat d - d | \geq \epsilon d
+%   \Longleftrightarrow
+%   | Y_t 2^t - d | \geq \epsilon d
+%   \Longleftrightarrow
+%   \left| Y_t - \frac{d}{2^t}   \right| \geq \frac{\epsilon d}{2^t}
+% \end{align}
 
 
 \end{document}
