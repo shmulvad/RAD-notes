@@ -59,7 +59,7 @@ F.eks. vil $y = 288_{10}$ give $\text{zeros}(y) = 1001 \underbrace{00000}_{zeros
   \Return $\hat d = 2^{z + 1/2}$
 \end{algorithm}\vspace{1em}
 
-Hvor Process $j$ svarer til vi løbende kører alle $j$'er i strømmen igennem i linje 3, hvor vi potentielt kunne stoppe på et vilkårligt tidspunkt.\\
+Hvor Process $j$ svarer til vi løbende kører alle $j$'er i strømmen igennem i linje 3-4, hvor vi potentielt kunne stoppe på et vilkårligt tidspunkt.\\
 
 Intuitionen for algoritmen er, at vi forventer 1 ud af de $d$ unikke elementer hashes så \texttt{zeros}$(h(j)) \geq \log d$, og vi forventer ikke nogle elementer at ramme \texttt{zeros}$(h(j)) \gg \log d$. Derfor vil maksværdien af \texttt{zeros}$(h(j))$ være en god approksimation af $\log d$.
 
