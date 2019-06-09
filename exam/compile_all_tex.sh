@@ -2,7 +2,7 @@
 
 # Set your preferred LaTeX compiler
 LaTeXCOMPILER="pdflatex"
-exts="aux bbl blg brf idx ilg ind lof log lol lot out toc synctex.gz"
+exts="aux bbl blg brf idx ilg ind lof log lol lot out toc fls fdb_latexmk synctex.gz"
 
 # Removes log-files
 clean_up_logs () {
@@ -23,10 +23,11 @@ compile_tex_file () {
     clean_up_logs "${1%.tex}"
 }
 
-# Go to the folder of the subject, compile it
-# and then go to root level again. Necessary to go
-# to folder of subject because of the way pdflatex
-# looks for files referenced in a .tex-file
+# cd to the folder of the subject, compile it
+# and then cd one level up again. Necessary to go
+# to folder of subject instead of just compiling
+# 'dir/file.tex' because of the way pdflatex looks
+# for files referenced in a .tex-file
 for f in *; do
     if [ -d ${f} ]; then
         # Will not run if no directories are available
