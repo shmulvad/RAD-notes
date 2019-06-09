@@ -14,10 +14,146 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Eksamensdisposition - Heavy Hitters}
+% Sektion 4
+
+\subsection{Problem}
+
+Vi har en strøm af par $(j_0, \Delta_0), \dots, (j_{s-1}, \Delta_{s-1}) \in [n]\times \mathbb Z$ (sættet af alle heltal).
+
+For hver eneste $j \in [n]$, lad $I_j = \{ i \in [n] \ | \ j_i = j \}$ og definer frekvensen
+$$
+f_j = \sum_{i \in I_j} \Delta_i
+$$
+
+Nu ønsker vi givet et $a$ at beregne et estimat $\hat f_a$ for $f_a$.
+
+\subsection{Algoritme}
+
+\begin{algorithm}[H] \caption{Basic Count Sketch} \label{alg:bcs}
+  \SetKwFunction{zeros}{zeros}%
+  %\BlankLine
+  \nonl Init\;
+  $k = \ceil{\frac{4}{\epsilon^2}}$\;
+  $C[0, \dots, k-1] = 0$\;
+  $h =$ strong-universel $h : [n] \rightarrow [k]$\;
+  $s =$ strong-universel $s : [n] \rightarrow \{-1, +1 \}$\;
+  \nonl Process $(j, \Delta)$\;
+  $C[h(j)]$ += $s(j) * \Delta$\;
+  \nonl Output\;
+  \Return $\hat f_a = s(a) * C[h(a)]$
+\end{algorithm}\vspace{1em}
+
+Hvor Process $(j, \Delta)$ svarer til vi løbende kører alle par i strømmen igennem i linje 5, hvor vi potentielt kunne stoppe på et vilkårligt tidspunkt.\\
+
+\subsection{Analyse}
+Lad os fiksere en nøgle $a$ og betragte outputtet $X = \hat f_a$ for en query $a$.
+
+For enhver nøgle $j \in [n]$, definer da indikatorvariablen $Y_j = [h(j) = h(a)]$.
+
+Vi ser, at en nøgle $j$ bidrager til tælleren $C[h(a)]$ hvis og kun hvis $h(j) = h(a)$.
+
+Mængden den bidrager med er den frekvens $f_j$ ganget med den tilfældige fortegn $s(j)$. Derfor:
+
+\begin{align}
+  X = \hat f_a
+  &= s(a) * C[h(a)] \nonumber \\
+  &= s(a) \sum_{j \in [n]} f_j \, s(j) Y_j \label{eq:sa-cha} \\
+  &= f_a \, s(a) s(a) Y_a + s(a) \summ{j \in [n]\\ j \neq a} f_j \, s(j) Y_j \label{eq:split-i-to} \\
+  &= f_a + s(a) \summ{j \in [n]\\ j \neq a} f_j \, s(j) Y_j \label{eq:temp-res}
+\end{align}
+
+I \cref{eq:sa-cha} benytter vi at et element kun tælles med når $Y_j = 1$.\\
+I \cref{eq:split-i-to} splitter vi vores sum i to, så vi tager højde for den unikke case når $j=a$ og alle andre cases.\\
+I \cref{eq:temp-res} benytter vi $s(a)s(a) = 1*1$ eller $(-1)(-1) = 1$ og $Y_a = [h(a) = h(a)] = 1$.\\
+
+
+Vi kan da regne på den forventede værdi af udtrykket i sumtegnet i \cref{eq:temp-res}:
+\begin{align}
+  \E{f_j \, s(j) Y_j}
+  = f_j \ \underbrace{\E{s(j)}}_{0} \ \E{Y_j}
+  = 0 \label{eq:exp-x}
+\end{align}
+
+Hvor forventningen af produktet er lig produktet af de forskellige forventninger da $s$ er 2-uafhængig, og $s$ og $h$ er uafhængige af hinanden.\\
+
+Da kan vi bruge \cref{eq:exp-x} til at regne videre på \cref{eq:temp-res} hvorved vi får:
+\begin{align}
+  \E{X}
+  = f_a + s(a) \summ{j \in [n]\\ j \neq a} \E{f_j \, s(j) Y_j}
+  = f_a
+\end{align}
+
+Hermed har vi altså vist at $X = \hat f_a$ er en unbiased estimator for frekvensen $f_a$. Men vi skal stadig vise at det er usandsynligt den afviger for meget fra dens forventede værdi.\\
+
+
+Derfor analyserer vi dens varians:
+\begin{align*}
+  \Var{X}
+  &= \E{(\hat f_a - f_a)^2}\\
+  &= \E{\pbigg{ f_a + s(a) \summ{j \in [n]\\ j \neq a} f_j \, s(j) Y_j - f_a}^2 }\\
+  &= \E{\pbigg{ s(a) \summ{j \in [n]\\ j \neq a} f_j \, s(j) Y_j }^2 }\\
+  &= \underbrace{(s(a))^2}_{1} \ \summ{i, j \in [n]\\i \neq a, \; j \neq a} \E{ f_i f_j s(i) s(j) Y_i Y_j }
+\end{align*}
+
+Vi bruger nu, at $h$ er stærk universel, så for ethvert $j \in [n]$ hvor $j \neq a$ har vi:
+$$
+\E{Y_j^2} = \E{Y_j} = \P{h(j) = h(a)} = \frac{1}{k}
+$$
+da $Y_j = 0 \lor 1$ og vi har $0^2 = 0$ og $1^2 = 1$.\\
+
+Hvis vi kigger på udtrykket i summen, så har vi:
+$$
+\E{ f_i f_j s(i) s(j) Y_i Y_j } =
+\begin{cases}
+	f_j^2 \underbrace{(s(j))^2}_{1} \underbrace{\E{Y_j^2}}_{\E{Y_j}} = f_j^2 / k & i = j\\
+  f_i f_j \underbrace{\E{s(i)}}_{0} \underbrace{\E{s(j)}}_{0} \E{Y_i Y_j} = 0 & i \neq j
+\end{cases}
+$$
+
+Vi definerer $\sum_{j \in [n]} f_j^2 = || \mathbf f ||_2^2$ (udtales ''to-normen i anden''), hvorved vi kan regne ud vores udtryk bliver (hvor $|| \mathbf f_{-a} ||_2^2 = || \mathbf f ||_2^2 - f_a^2$.):
+$$
+\Var{X} = \summ{j \in [n]\\ j \neq a} \frac{f_j^2}{k} = \frac{|| \mathbf f_{-a} ||_2^2}{k}
+$$
+
+Med vores informationer for forventning og varians kan vi nu benytte Chebyshev:
+$$
+\P{|\hat f_a - f_a| \geq \epsilon || \mathbf f_{-a} ||_2}
+\leq \frac{\Var{X}}{\epsilon^2 ||\mathbf f_{-a}||_2^2}
+= \frac{1}{k \epsilon^2}
+\leq \frac{1}{4}
+$$
+Idet vi satte $k = \ceil{4 / \epsilon^2}$ i vores algoritme.
+
+
+\subsection{Median trick}
+Vi laver $t$ uafhængige estimater $X_0, \dots, X_{t-1}$ i parallel (ved at bruge forskellige hashfunktioner) og returnerer medianen $X_{(\ceil{t/2})}$ af de $t$ svar (Tal om hvad man skulle ændre i algoritmen).\\
+
+Vi siger $X_i$ fejler hvis $|X_i - \E{X}| \geq Q$, hvor $Q$ f.eks. er vores sandsynlighed fra før.\\
+Lad $B_i = [X_i \text{ fejler}]$ og lad $B$ være antallet der fejler:
+$$
+B = \sum_{i \in [t]} B_i
+$$
+
+
+Da har vi, at hvis $X_{(\ceil{t/2})}$ fejler, så betyder det at $B \geq t/2$.\\
+Den forventede værdi af $B$ må være
+$$
+\E{B} = \mu = \sum_{i \in [t]} \E{B_i} \leq t/4
+$$
+
+Da kan vi beregne:
+$$
+\P{\text{Median fejler}}
+= \P{B \geq 2 \mu}
+= \P{B \geq (1 + \delta) \mu }
+\leq e^{- \delta^2 \mu / 3}
+\leq e^{-t/12}
+$$
+
+Hvor vi bruger Chernoff Bounds til at begrænse sandsynligheden, og herudover i eksponentialet benytter $\delta = 1$.
 
 
 
-
-
+Herved har vi altså væsentligt begrænset sandsynligheden for at få noget rimelig forkert.
 
 \end{document}

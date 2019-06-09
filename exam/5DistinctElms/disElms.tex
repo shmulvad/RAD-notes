@@ -148,7 +148,7 @@ I \cref{eq:benyt-chebyshev} benytter vi Chebyshevs ulighed og at $\Var{Y_r} = \E
 Vi ser at garantierne er relativt små. Det ses både ved at $\hat d$ kan afvige med en del og at vores sandsynligheder kun er begrænset af omkring 25 \%.
 
 \subsection{Median tricket}
-Lav nu $k$ uafhængige estimater $\hat d_0, \dots, \hat d_{k-1}$ i parallel (ved at bruge forskellige hashfunktioner) og returner medianen $\hat d_{(\ceil{k/2})}$ af de $k$ svar.\\
+Lav nu $k$ uafhængige estimater i parallel (ved at bruge forskellige hashfunktioner) og returner medianen $\hat d_{(\ceil{k/2})}$ af de $k$ svar.\\
 
 
 Lad $Z_i = [\hat d_i \geq t]$ og definer $Z$ til
@@ -158,17 +158,19 @@ $$
 
 Hvis vi bruger $t = 6d$ får vi:
 $$
-  \E{Z} = \sum_{i \in [k]} \P{Z_i} \leq k * 1/4 = k/4
+  \E{Z} = \mu = \sum_{i \in [k]} \P{Z_i} \leq k * 1/4 = k/4
 $$
 
 Da får vi
-\begin{align}
+\begin{align*}
   \P{\hat d_{(\ceil{k/2})} > t}
   = \P{Z > \ceil{k/2}}
-  = \P{Z \geq 2 \E{Z}}
-  \leq e^{- \mu / 3}
+  = \P{Z \geq 2 \mu}
+  = \P{Z \geq (1 + \delta) \mu }
+  \leq e^{- \delta^2 \mu / 3}
   = e^{- k / 12}
-\end{align}
+\end{align*}
+Hvor vi bruger Chernoff Bounds til at begrænse sandsynligheden, og herudover i eksponentialet benytter $\delta = 1$.\\
 
 Herved har vi altså væsentligt begrænset sandsynligheden for at få noget rimelig forkert.
 
