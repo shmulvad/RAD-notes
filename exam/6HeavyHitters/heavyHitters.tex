@@ -4,6 +4,23 @@
 \begin{document}
 \maketitle
 
+\begin{itemize}
+  \item \textbf{Problem}
+  \item \textbf{Basic Count Sketch Algoritme}
+  \item \textbf{Kvalitet af Basic Count Sketch estimatet}
+  \begin{itemize}
+    \item Forventet værdi
+    \item Varians
+    \item Afvigelse
+  \end{itemize}
+  \item \textbf{Median tricket og Full Count Sketch}
+  \item \textbf{Count-Min Sketch Algoritme}
+  \item \textbf{Kvalitet af Count-Min Sketch estimatet}
+  \begin{itemize}
+    \item Analyse for én tæller
+    \item Analyse for flere tællere
+  \end{itemize}
+\end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,11 +44,9 @@ $$
 
 Nu ønsker vi givet et $a$ at beregne et estimat $\hat f_a$ for $f_a$.
 
-\subsection{Algoritme}
+\subsection{Basic Count Sketch Algoritme}
 
 \begin{algorithm}[H] \caption{Basic Count Sketch} \label{alg:bcs}
-  \SetKwFunction{zeros}{zeros}%
-  %\BlankLine
   \nonl Init\;
   $k = \ceil{\frac{4}{\epsilon^2}}$\;
   $C[0, \dots, k-1] = 0$\;
@@ -45,7 +60,7 @@ Nu ønsker vi givet et $a$ at beregne et estimat $\hat f_a$ for $f_a$.
 
 Hvor Process $(j, \Delta)$ svarer til vi løbende kører alle par i strømmen igennem i linje 5, hvor vi potentielt kunne stoppe på et vilkårligt tidspunkt.\\
 
-\subsection{Analyse}
+\subsection{Kvalitet af Basic Count Sketch estimatet}
 Lad os fiksere en nøgle $a$ og betragte outputtet $X = \hat f_a$ for en query $a$.
 
 For enhver nøgle $j \in [n]$, definer da indikatorvariablen $Y_j = [h(j) = h(a)]$.
@@ -125,8 +140,8 @@ $$
 Idet vi satte $k = \ceil{4 / \epsilon^2}$ i vores algoritme.
 
 
-\subsection{Median trick}
-Vi laver $t$ uafhængige estimater $X_0, \dots, X_{t-1}$ i parallel (ved at bruge forskellige hashfunktioner) og returnerer medianen $X_{(\ceil{t/2})}$ af de $t$ svar (Tal om hvad man skulle ændre i algoritmen).\\
+\subsection{Median tricket}
+Vi laver $t$ uafhængige estimater $X_0, \dots, X_{t-1}$ i parallel (ved at bruge forskellige hashfunktioner) og returnerer medianen $X_{(\ceil{t/2})}$ af de $t$ svar (Tal om hvad man skulle ændre i algoritmen. Denne algoritme kaldes ofte ''Final Count Sketch'').\\
 
 Vi siger $X_i$ fejler hvis $|X_i - \E{X}| \geq Q$, hvor $Q$ f.eks. er vores sandsynlighed fra før.\\
 Lad $B_i = [X_i \text{ fejler}]$ og lad $B$ være antallet der fejler:
@@ -150,10 +165,77 @@ $$
 \leq e^{-t/12}
 $$
 
-Hvor vi bruger Chernoff Bounds til at begrænse sandsynligheden, og herudover i eksponentialet benytter $\delta = 1$.
-
-
+Hvor vi bruger Chernoff Bounds til at begrænse sandsynligheden, og herudover i eksponentialet benytter $\delta = 1$.\\
 
 Herved har vi altså væsentligt begrænset sandsynligheden for at få noget rimelig forkert.
+
+\subsection{Count-Min Sketch}
+Vi har næsten samme problem som før, med den forskel at vi antager at der for hvert par $(j, \Delta)$ i strømmen gælder $\Delta > 0$.
+
+\begin{algorithm}[H] \caption{Count-Min Sketch} \label{alg:count-min}
+  \nonl Init\;
+  $k = \ceil{\frac{2}{\epsilon}}$\;
+  \BlankLine
+  $t = \ceil{\lg \frac{1}{\delta}}$\;
+  \BlankLine
+  \For{$i \in [t]$}{
+    $C_i [0, \dots, k-1] = 0$\;
+    $h_i =$ strong-universel $h : [n] \rightarrow [k]$\;
+  }
+  \nonl Process $(j, \Delta)$\;
+  \For{$i \in [t]$}{
+    $C_i [h_i(j)]$ += $\Delta$
+  }
+  \nonl Output\;
+  \Return $\hat f_a = \min_{i \in [t]} C_i [h_i(a)]$
+\end{algorithm}\vspace{1em}
+
+\subsection{Kvalitet af Count-Min Sketch estimatet}
+
+Vi ser tydeligt at enhver tæller $C_i[h_i(a)]$ korresponderende til en nøgle $a$ er et overestimat af $f_a$. Derfor vil vi altid have:
+$$
+f_a \leq \hat f_a
+$$
+
+For en fikseret $a$ analyserer vi nu overskuddet i én tæller, lad os sige $C_i[h_i(a)]$. Lad den stokastiske variabel $X_i$ beskrive dette overskud. For $j \in [n]$ hvor $j \neq a$ lader vi $Y_{i,j} = [h_i(j) = h_i(a)]$. Bemærk at $j$ bidrager til tælleren hvis og kun hvis $Y_{i,j} = 1$ og når det gør er bidraget $f_j$. Således
+$$
+  X_i = \summ{j \in [n]\\ j \neq a} f_j Y_{i,j}
+$$
+
+
+På grund af $h_i$ er stærk universel er $\E{Y_{i,j} = 1/k}$. Således får vi ved linearity of expectation:
+$$
+  \E{X_i}
+  = \summ{j \in [n]\\ j \neq a} \frac{f_j}{k}
+  = \frac{||\mathbf f||_1 - f_a}{k}
+  = \frac{||\mathbf f_{-a}||_1}{k}
+$$
+
+Siden alle $f_j \geq 0$ har vi $X_i \geq 0$, og kan derfor bruge Markovs ulighed til at få:
+$$
+  \P{X_i \geq \epsilon ||\mathbf f_{-a}||_1}
+  \leq \frac{\E{X_i}}{\epsilon ||\mathbf f_{-a}||_1}
+  = \frac{1}{k \epsilon}
+  = \frac{1}{2}
+$$
+pga. vores valg af $k$ i algoritmen.
+
+\subsection{Flere tællere}
+Ovenstående sandsynlighed er for én tæller. Vi har $t$ tællere som er uafhængige. Overskuddet i outputtet, $\hat f_a - f_a$, er minimum af overskuddet for alle $X_i$ hvor $i \in [t]$. Derfor får vi:
+
+\begin{align}
+  \P{\hat f_a - f_a \geq \epsilon ||\mathbf f_{-a}||_1}
+  &= \P{\min\{X_1, \dots, X_t\} \geq \epsilon ||\mathbf f_{-a}||_1}\\
+  &= \P{\forall i \in [t] \text{ gælder } X_i \geq \epsilon ||\mathbf f_{-a}||_1}\\
+  &= \prod_{i=1}^t \P{X_i \geq \epsilon ||\mathbf f_{-a}||_1}\\
+  &\leq \frac{1}{2^t}
+\end{align}
+
+Med vores valg af $t$ i algoritmen bliver denne sandsynlighed højest $\delta$. Derfor har vi vist at der med høj sandsynlighed gælder:
+$$
+  f_a \leq \hat f_a \leq f_a + \epsilon ||\mathbf f_{-a}||_1
+$$
+hvor uligheden til venstre altid holder, og den højre ulighed fejler med sandsynligheden højest $\delta$.
+
 
 \end{document}
