@@ -22,7 +22,6 @@
 \usepackage{pdfpages} % include pdf
 \usepackage{float} % Use [H] in figures
 \usepackage{subcaption} % For subfigures
-\usepackage{color} % May be necessary if you want to color links
 \usepackage{hyperref} % Make references clickable
 \usepackage[nameinlink,capitalize]{cleveref} % Make eq:refs be in style (1)
 \usepackage[linesnumbered, commentsnumbered, lined, ruled, vlined,
@@ -59,8 +58,12 @@
 % Set indentation to 0:
 \setlength\parindent{0pt}
 
-
-\newcommand{\TODO}[1]{{\color{red} \textbf{TODO:} #1}}
+% Make TODO's very easy to visually spot in pdf.
+\newcommand{\TODO}[1]{
+  \colorbox{orange}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{
+    \textbf{TODO:} #1
+  }}
+}
 
 % Keywords relateret til algorithm2e pakken
 \newcommand{\True}{\textbf{true}}\newcommand{\False}{\textbf{false}}
@@ -107,7 +110,16 @@
 \def\mcirc{\mathbin{\scalerel*{\bigcirc}{t}}}
 \def\msquare{\mathord{\scalerel*{\Box}{gX}}}
 
+% Parentheses a very specific height
+\makeatletter
+\newcommand*{\bigsl}[1]{{\hbox{$\left#1\vbox to29\p@{}\right.\n@space$}}}
+\newcommand*{\bigsr}[1]{{\hbox{$\left.\vbox to29\p@{}\right#1\n@space$}}}
+\makeatother
+
 % To allow for curly brackets to the right of vectors
 \newcommand{\noleftdelimiter}{\left.\kern-\nulldelimiterspace}
+
+% Equals sign with question mark above it
+\newcommand{\?}{\stackrel{?}{=}}
 
 \author{Søren Mulvad, rbn601}
