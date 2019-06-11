@@ -104,10 +104,32 @@ $$
 
 
 \subsubsection{Induktionsbevis}
-Vi har allerede bevist casen når $n = 1$. Antag $n \geq 2$ og det holder for alle mindre $n$. Lad $Q \neq 0$ og lad $k > 0$ være den største eksponent af $x_n$.
+Vi har allerede bevist casen når $n = 1$. Antag $n \geq 2$ og det holder for alle mindre $n$. Lad $Q \neq 0$ og lad $k > 0$ være den største eksponent af $x_n$.\\
 
-\TODO{Skriv færdig.}
+Da vil der eksistere $Q_0, \dots, Q_k$ således at
+$$
+  Q(x_1, \dots, x_n) = \sum_{i=0}^k Q_i (x_1, \dots, x_{n-1}) x_n^i
+$$
+(Det kan vi få på simpel vis ved bare at gruppere alle led der indeholder $x_n^i$ og flytte $x_n^i$ uden for en parentes.)
 
+Vi har at $Q_k \neq 0$ da $k$ er en eksponent af $x_n$ som indgår i $Q$. $\text{deg}(Q_k) \leq d - k$, da $Q_k (x_1, \dots, x_{n-1})x_n^k$ er et led i $Q$, så graden af dette må være $\leq d$ og når vi fjerner $x_n^k$ fjerner vi $k$ fra graden. Vær opmærksom på dette kun gælder for $Q_k$, ikke nødvendigvis for de andre $Q_i$.\\
+
+
+Nu vælger vi uniformt tilfældigt $r_1, \dots, r_{n-1} \in \mathbb S$. Lad $C_i = Q_i(r_1, \dots, r_{n-1})$. Da $Q_k \neq 0$ har vi pr. vores induktionsantagelse at $\P{C_k = 0} \leq \frac{d - k}{|\mathbb S|}$.\\
+
+Hvis $C_k \neq 0$ kan vi definere $q(x) = \sum_{i=1}^k C_i x^i = Q(r_1, \dots, r_{n-1}, x)$. Hvis $q(x) \neq 0$ kan vi se det har graden $k$, så for uniform $r_n \in \mathbb S$ får vi:
+$$
+\P{q(r_n) = 0 \ | C_k \neq 0} \leq \frac{k}{|\mathbb S|}
+$$
+
+Endelig kan vi udregne:
+\begin{align}
+  \P{Q(r_1, \dots, r_n) = 0}
+  &\leq \P{C_k = 0} + \P{q(r_n) = 0 | C_k \neq 0}\\
+  &\leq \frac{d - k}{|\mathbb S|} + \frac{k}{|\mathbb S|} = \frac{d}{|\mathbb S|}
+\end{align}
+
+Hermed har vi altså bevist Schwartz-Zippel Theoremet, som er en generalisering for polynomial identitet for multivariable polynomier.
 
 
 \subsection{Streng-lighed 1: (mod p) fingerprint}
@@ -197,7 +219,7 @@ $$
   = \p{2 \p{ B_{j+1} - b_{j+m} 2^{m-1} } + b_j} \bmod p
 $$
 
-Således kan vi beregne $B_{n-m}$ i $O(m)$ tid og herefter alle de resterende $B_j$ frem til $B_0$ i hver $O(1)$ tid, som giver os en endelig køretid på $O(n*1 + m) = O(n)$.
+Således kan vi beregne $B_{n-m}$ i $\O{m}$ tid og herefter alle de resterende $B_j$ frem til $B_0$ i hver $\O{1}$ tid, som giver os en endelig køretid på $\O{n*1 + m} = \O{n}$.
 
 
 \subsection{Pattern Matching: Polynomier}
@@ -227,6 +249,7 @@ $$
 \TODO{Spørg til hvad der er fidusen ved denne. At vi skal kommunikere få bits eller lav køretid? Spørg til om vi tager udgangspunkt i $B$ er $n$ eller $m$ langt, og om vi kigger på $B$ eller $B_j$.}
 
 Note: Man kan også lave næsten samme trick for at sammenligne to sæt af tal, men med deres produkt i stedet. Forventes dog ikke til eksamen.
+
 
 
 \end{document}
