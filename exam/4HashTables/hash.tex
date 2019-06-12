@@ -33,6 +33,14 @@ $$
 
 Hvis $c = 1$ kalder vi den blot for universel.\\
 
+Vi kan implementere en 2-universel hashing funktion på f.eks. følgende måder:
+$$
+  ((ax + b) \bmod p) \bmod m
+  \longspace
+  (a' x) >> (w-l)
+$$
+hvor vi i MulShift har at $a'$ skal være ulige og $m = 2^l$.\\
+
 Hashing funktioner benyttes særligt ofte i det man typisk kalder dictionaries. Lad os sige vi har en liste $S$ med $|S| = n$ nøgle/værdi-par. Så laver et array $L$ der er $m \geq n$ langt med lister og laver en hashing funktion $h : U \rightarrow [m]$.
 
 Da vil $L[i]$ bestå af alle de elementer hvis nøgle hashes til dette index $i$:
