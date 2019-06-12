@@ -37,9 +37,9 @@
 
 Vi har en strøm af par $(j_0, \Delta_0), \dots, (j_{s-1}, \Delta_{s-1}) \in [n]\times \mathbb Z$ (sættet af alle heltal).
 
-For hver eneste $j \in [n]$, lad $I_j = \{ i \in [n] \ | \ j_i = j \}$ og definer frekvensen
+Vi definerer frekvensen $f_j$ for hver eneste $j \in [n]$ som
 $$
-f_j = \sum_{i \in I_j} \Delta_i
+f_j = \summ{i \in [s], j_i = j} \, \Delta_i
 $$
 
 Nu ønsker vi givet et $a$ at beregne et estimat $\hat f_a$ for $f_a$.
