@@ -4,6 +4,18 @@
 \begin{document}
 \maketitle
 
+\begin{itemize}
+  \item \textbf{Problem}
+  \item \textbf{Kvalitet af Count Sketch estimatet}
+  \begin{itemize}
+    \item Forventet værdi
+    \item Varians
+    \item Afvigelse fra korrekt resultat
+  \end{itemize}
+  \item \textbf{Median trick}
+\end{itemize}
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -15,7 +27,123 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Eksamensdisposition - Second Moment}
 
+\subsection{Problem}
 
+Vi har en strøm af par $(j_0, \Delta_0), \dots, (j_{s-1}, \Delta_{s-1}) \in [n]\times \mathbb Z$ (sættet af alle heltal).
+
+Vi definerer frekvensen $f_j$ for hver eneste $j \in [n]$ som
+$$
+f_j = \summ{i \in [s], j_i = j} \, \Delta_i
+$$
+
+Derudover definerer vi det $m$'te moment $F_m = \sum_{j \in [n]} f_j^m = ||f||_m^m$. Vi ønsker nu at estimere det 2. moment $F_2 = \sum_{i \in [n]} f_i^2$ ved kun at bruge $k$ tællere.
+
+
+
+\subsection{Count Sketch Algoritme}
+
+\begin{algorithm}[H] \caption{Count Sketch} \label{alg:bcs}
+  \nonl Init\;
+  $k = \ceil{\frac{8}{\epsilon^2}}$\;
+  $C[0, \dots, k-1] = 0$\;
+  $h =$ 4-universel $h : [n] \rightarrow [k]$\;
+  $s =$ 4-universel $s : [n] \rightarrow \{-1, +1 \}$\;
+  \nonl Process $(j, \Delta)$\;
+  $C[h(j)]$ += $s(j) * \Delta$\;
+  \nonl Output\;
+  \Return $X = \sum_{j \in [k]} C[j]^2$
+\end{algorithm}\vspace{1em}
+
+Hvor Process $(j, \Delta)$ svarer til vi løbende kører alle par i strømmen igennem i linje 4, hvor vi potentielt kunne stoppe på et vilkårligt tidspunkt.
+
+\subsection{Kvalitet af Count Sketch estimatet}
+
+\subsubsection{Forventet værdi}
+
+Vi har $C[b] = \sum_{j \in [n]} s(j) f_j [h(j) = b]$, så:
+\begin{align*}
+  X
+  &= \sum_{b \in [k]} \p{ \sum_{j \in [n]} s(j) f_j [h_j = b] }^2\\
+  &= \sum_{b \in [k]} \sum_{i,j \in [n]} s(i) s(j) f_i f_j [h(i) = b = h(j)]\\
+  &= \sum_{i,j \in [n]} s(i)s(j) f_i f_j [h(i) = h(j)]\\
+  &= \sum_{i \in [n]} f_i^2 + \summ{i,j \in [n]\\ i \neq j} s(i) s(j) f_i f_j [h(i) = h(j)]\\
+  &= F_2 + Y
+\end{align*}
+
+Hvis vi nu kan vise $\E{Y} = 0$ har vi da vist $\E{X} = F_2$. Pga. vi sagde vores hashing-funktion er 4-universel er $s(i), s(j), h(i)$ og $h(j)$ uafhængige. Derudover har vi $\E{s(i)} = 0$, så alle led i summen bliver 0 hvorved $\E{Y} = 0$.
+
+\subsection{Varians}
+Vi ønsker at bestemme variansen af $X$ nu:
+
+\begin{align}
+  \Var{X}
+  &= \Var{Y} = \E{Y^2} - \underbrace{\E{Y}}_{0} \nonumber \\
+  &= \E{\p{ \ \summ{i, j \in [n]\\ i \neq j} s(i) s(j) f_i f_j [h(i) = h(j)]  }^2} \nonumber \\
+  &= \summ{i, j, i', j' \in [n]\\ i \neq j, \ i' \neq j'} \E{ \pBig{s(i) s(j) f_i f_j [h(i) = h(j)]} \pBig{s(i') s(j') f_{i'} f_{j'} [h(i') = h(j')]  } } \label{eq:monster-sum}
+\end{align}
+
+Nu tager vi udgangspunkt i ét af leddene i summen i \cref{eq:monster-sum}. Hvis vi har den situation at en af nøglerne er unik, f.eks. $i \notin \{j, i', j'\}$, så vil $i$ pr. 4-universaliteten være uafhængig af $j, i', j'$ samt hashfunktionen $h$. hvorved vi ville kunne sætte $\E{s(i)}$ uden for en parentes i \cref{eq:monster-sum} op. Da $\E{s(i)} = 0$ vil vi derfor få at et led i summen i \cref{eq:monster-sum} med en unik nøgle vil give $0$.\\
+
+Vi kan derfor begrænse vores opmærksomhed til kun de led der ikke har unikke nøgler. Siden $i \neq j$ og $i' \neq j'$ må vi enten have $(i, j) = (i', j')$ eller $(i, j) = (j', i')$, altså 2 cases for hvert $i$ og $j$. Derfor:
+\begin{align}
+  \text{Eq. \cref{eq:monster-sum}}
+  &= 2 \summ{i, j \in [n]\\ i \neq j} \E{\pBig{s(i) s(j) f_i f_j [h(i) = h(j)]}^2} \label{eq:continue-calcing} \\
+  &= 2 \summ{i, j \in [n]\\ i \neq j} \E{f_i^2 f_j^2 [h(i) = h(j)]} \label{eq:simplify-square} \\
+  &= 2 \summ{i, j \in [n]\\ i \neq j} (f_i^2 f_j^2) \P{h(i) = h(j)} \label{eq:exp-to-prob} \\
+  &= 2 \summ{i, j \in [n]\\ i \neq j} \frac{f_i^2 f_j^2}{k} \nonumber \\
+  &= \frac{2}{k} \ \summ{i, j \in [n]\\ i \neq j} f_i^2 f_j^2 \nonumber \\
+  &< \frac{2}{k} \pBig{\sum_{i \in [n]} f_i^2}^2 \label{eq:two-vars-to-one} \\
+  &= 2 F_2^2 / k \nonumber
+\end{align}
+
+I \cref{eq:continue-calcing} bruger vi, at der netop var 2 cases hvor nøglerne var lig hinanden, og så har vi bare sat $i' = i$ og $j' = j$ i summen.\\
+I \cref{eq:simplify-square} bruger vi, at $s(x)^2 = 1*1$ eller $(-1)(-1) = 1$ og indikatorvariablen er 0 eller 1, så opløftet i anden er den lig sig selv.\\
+I \cref{eq:exp-to-prob} benytter vi linearity of expectation og igen at $[h(i) = h(j)]$ er en indikatorvariabel.\\
+I \cref{eq:two-vars-to-one} må vores udtryk være mindre da vi ser bort fra alle de led hvor $i \neq j$.
+
+\subsubsection{Afvigelse ved brug af Chebyshev}
+Da vi nu har vist
+$$
+  \E{X} = F_2
+  \longspace
+  \Var{X} < \frac{2 F_2^2}{k}
+$$
+
+medfører det jf. Chebyshev's ulighed og vores valg af $k$ at:
+$$
+  \P{|X - F_2| \geq \epsilon F_2 }
+  \leq \frac{\Var{X}}{(\epsilon F_2)^2}
+  \leq \frac{2}{(k \epsilon^2)}
+  = \frac{1}{4}
+$$
+
+
+\subsection{Median trick}
+Vi laver $t$ uafhængige estimater $X_0, \dots, X_{t-1}$ i parallel (ved at bruge forskellige hashfunktioner) og returnerer medianen $X_{(\ceil{t/2})}$ af de $t$ svar. Vi siger $X_i$ fejler hvis $|X_i - \E{X}| \geq \epsilon F_2$.\\
+
+Lad $B_i = [X_i \text{ fejler}]$ og lad $B$ være antallet der fejler:
+$$
+B = \sum_{i \in [t]} B_i
+$$
+
+
+Da har vi, at hvis $X_{(\ceil{t/2})}$ fejler, så betyder det at $B \geq t/2$.\\
+Da $\P{B_i = 1} \leq \frac{1}{4}$ må den forventede værdi af $B$ være
+$$
+\E{B} = \mu = \sum_{i \in [t]} \E{B_i} \leq t/4
+$$
+Da kan vi beregne:
+$$
+\P{\text{Median fejler}}
+= \P{B \geq 2 \mu}
+= \P{B \geq (1 + \delta) \mu }
+\leq e^{- \delta^2 \mu / 3}
+\leq e^{-t/12}
+$$
+
+Hvor vi bruger Chernoff Bounds til at begrænse sandsynligheden, og herudover i eksponentialet benytter $\delta = 1$.\\
+
+Herved har vi altså væsentligt begrænset sandsynligheden for at få noget rimelig forkert.
 
 
 

@@ -143,7 +143,7 @@ Idet vi satte $k = \ceil{4 / \epsilon^2}$ i vores algoritme.
 \subsection{Median tricket}
 Vi laver $t$ uafhængige estimater $X_0, \dots, X_{t-1}$ i parallel (ved at bruge forskellige hashfunktioner) og returnerer medianen $X_{(\ceil{t/2})}$ af de $t$ svar (Tal om hvad man skulle ændre i algoritmen. Denne algoritme kaldes ofte ''Final Count Sketch'').\\
 
-Vi siger $X_i$ fejler hvis $|X_i - \E{X}| \geq Q$, hvor $Q$ f.eks. er vores sandsynlighed fra før.\\
+Vi siger $X_i$ fejler hvis $|X_i - \E{X}| \geq \epsilon || \mathbf f_{-a} ||_2$.\\
 Lad $B_i = [X_i \text{ fejler}]$ og lad $B$ være antallet der fejler:
 $$
 B = \sum_{i \in [t]} B_i
@@ -151,7 +151,7 @@ $$
 
 
 Da har vi, at hvis $X_{(\ceil{t/2})}$ fejler, så betyder det at $B \geq t/2$.\\
-Den forventede værdi af $B$ må være
+Da $\P{B_i = 1} \leq \frac{1}{4}$ må den forventede værdi af $B$ være
 $$
 \E{B} = \mu = \sum_{i \in [t]} \E{B_i} \leq t/4
 $$
