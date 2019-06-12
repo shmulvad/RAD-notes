@@ -10,6 +10,7 @@
   \item \textbf{Schwartz-Zippel Theorem: Multivariabel polynomial identitet}
   \item \textbf{Streng-lighed 1: (mod p) fingerprint}
   \item \textbf{Streng-lighed 2: Freivald (Polynomier)}
+  \item \textbf{Sæt-lighed med produkter}
   \item \textbf{Pattern Matching: Efficient Fingerprints}
 \end{itemize}
 
@@ -214,8 +215,21 @@ $$
   = \frac{1}{n}
 $$
 
-Note: Man kan også lave næsten samme trick for at sammenligne to sæt af tal, men med deres produkt i stedet. Forventes dog ikke til eksamen.
+\subsection{Sæt-lighed med produkter}
+Vi kan modificere en smule på ovenstående algoritme for at tjekke om to sæt er ens:
 
+$$
+  a = \{a_0, \dots, a_{m-1} \}
+  \?
+  \{b_0, \dots, b_{m-1} \} = b
+$$
+ved at vælge et $r$ uniformt i en finit mængde $\mathbb S$ og derefter beregne:
+$$
+  \prod_{i \in [m]} (r - a_i) \?
+  \prod_{i \in [m]} (r - b_i)
+$$
+
+Fidusen er at vi finder produktet, så derved bliver rækkefølgen ligegyldig.
 
 
 \subsection{Pattern matching: Efficient Fingerprints}
