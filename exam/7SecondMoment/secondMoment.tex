@@ -77,7 +77,7 @@ Vi ønsker at bestemme variansen af $X$ nu:
 
 \begin{align}
   \Var{X}
-  &= \Var{Y} = \E{Y^2} - \underbrace{\E{Y}}_{0} \nonumber \\
+  &= \Var{Y} = \E{Y^2} - \underbrace{\E{Y}^2}_{0} \nonumber \\
   &= \E{\p{ \ \summ{i, j \in [n]\\ i \neq j} s(i) s(j) f_i f_j [h(i) = h(j)]  }^2} \nonumber \\
   &= \summ{i, j, i', j' \in [n]\\ i \neq j, \ i' \neq j'} \E{ \pBig{s(i) s(j) f_i f_j [h(i) = h(j)]} \pBig{s(i') s(j') f_{i'} f_{j'} [h(i') = h(j')]  } } \label{eq:monster-sum}
 \end{align}
