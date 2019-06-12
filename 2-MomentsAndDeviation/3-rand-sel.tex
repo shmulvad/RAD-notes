@@ -113,8 +113,7 @@ Og da kan vi beregne:
 \end{align}
 
 I \cref{eq:x-less-l} bruger vi, at $X$ er antal elementer (i en sorteret udgave af $S$) før eller ved placeringen af $S_{(k)}$. $l$ bestemmer hvilket element vi starter ved af de udtrukne. Derfor må fejltype 1 opstå, når antallet af udtrukne elementer der opfylder at være $\leq S_{(k)}$ er et mindre antal end vores ''start-index'' for de udtrukne elementer, $l$.\\
-I \cref{eq:fjern-max} benytter vi, at før tog vi max af de to udtryk. Ved nu altid bare at tage ét af udtrykkene kan det kun potentielt blive mindre, hvorved sandsynligheden også kun potentielt bliver mindre.\\
-\textbf{TODO: Hvad? Det giver jo ikke nogen mening at sandsynligheden potentielt bliver mindre.}\\
+I \cref{eq:fjern-max} benytter vi, at såfremt 1 er max, så kan $X$ stadig lavest være 0. Derfor må $\leq$ af det andet udtryk stadig gælde. Vores $\leq$ mellem linjerne får vi fra at vi nu siger $\leq$ inde i selve sandsynligheden.\\
 
 Nu bruger vi det lemma, at givet \emph{uafhængige} stokastiske variable $Y_1, ..., Y_m$, hvor vi lader $Y = \sum_{i=1}^m Y_i$, da er variansen $\sigma_Y^2 = \sum_{i=1}^m {\sigma_{Y_i}}^2$:
 \begin{align}

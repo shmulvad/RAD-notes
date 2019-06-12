@@ -34,8 +34,7 @@ Problemet ved denne tilgang er, at vi skal vælge $t \lg n$ random bits. Hvis vi
 \subsection{Algoritme 2 - $2 \lg n$ random bits}
 Vælg $a, b \in \curly{0, \dots, n-1}$ uafhængigt og uniformt tilfældigt.\\
 
-Da vi antager $n$ er et primtal, så kan man vise at, for $X_i = (a * i + b) \mod n$ vil $X_i$ og $X_j$ hvor $i \neq j$ være uniformt distribueret i $0, \dots, n-1$ og parvist uafhængige. (Ex 3.7)\\
-\textbf{TODO: Spørg om vi bare kan bruge (Ex 3.7) til eksamen}
+Da vi antager $n$ er et primtal, så kan man vise at, for $X_i = (a * i + b) \bmod n$ vil $X_i$ og $X_j$ hvor $i \neq j$ være uniformt distribueret i $0, \dots, n-1$ og parvist uafhængige (kan blot antages, skal ikke bevises).\\
 
 Med den info, lad $r_i = (a * i + b) \mod n$ for $i = 0, \dots, t-1$.\\
 Igen beregner vi $A(x, r_0), \dots, A(x, r_{t-1})$ og vælger 1 såfremt den optræder bare én gang, ellers 0.\\

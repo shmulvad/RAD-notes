@@ -9,8 +9,8 @@
   \item \textbf{Freivalds teknik: Polynomial identitet}
   \item \textbf{Schwartz-Zippel Theorem: Multivariabel polynomial identitet}
   \item \textbf{Streng-lighed 1: (mod p) fingerprint}
+  \item \textbf{Streng-lighed 2: Freivald (Polynomier)}
   \item \textbf{Pattern Matching: Efficient Fingerprints}
-  \item \textbf{Pattern Matching: Polynomier}
 \end{itemize}
 
 
@@ -190,6 +190,34 @@ I \cref{eq:primtal} har vi antallet af primtal $p$ der dividerer $c$ ud af alle 
 I \cref{eq:primtal-saatning} benytter vi primtalssætningen der siger, at antallet af primtal mindre end tallet $x$ konvergerer mod $x / \ln x$.
 
 
+\subsection{Streng-lighed 2: Freivald (Polynomier)}
+Vi har samme typer bitstrenge $(a_0, \dots, a_{m-1})$ og $b$ som før. Nu definerer vi:
+$$
+  A(x) = \sum_{i \in [m]} a_i x^i
+  \longspace
+  B_j(x) = \sum_{i \in [m]} b_{j+i} x^i
+$$
+
+Nu ønsker vi at bestemme $A(x) \? B(x)$, hvilket svarer til at de to bitstrenge er ens.
+
+Vi starter med at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
+$$
+  A(r) \? B(r) \pmod p
+$$
+
+Da får vi at graden af $B$ er $n$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
+$$
+  \P{\text{FP}}
+  = \P{A(r) = B(r) \ | A \neq B_j}
+  \leq \frac{n}{p}
+  \leq \frac{n}{n^2}
+  = \frac{1}{n}
+$$
+
+Note: Man kan også lave næsten samme trick for at sammenligne to sæt af tal, men med deres produkt i stedet. Forventes dog ikke til eksamen.
+
+
+
 \subsection{Pattern matching: Efficient Fingerprints}
 Vi ønsker at tjekke om der findes et $j$ så:
 $$
@@ -197,10 +225,7 @@ $$
 $$
 hvor $m \leq n$.\\
 
-\TODO{Hvordan vælger vi $p$?}
-
-Nu beregner vi så $a \bmod p$. Derudover ønsker vi at beregne alle $B_j \bmod p$ i $O(n)$ tid, hvilket vi både udregner i baglæns rækkefølge og hvor vi aflæser deres bitstreng baglæns.
-
+Vi vælger uniformt tilfældigt et $p < n^2$. Herefter beregner vi så $a \bmod p$. Derudover ønsker vi at beregne alle $B_j \bmod p$ i $O(n)$ tid, hvilket vi både udregner i baglæns rækkefølge og hvor vi aflæser deres bitstreng baglæns.\\
 
 Vi starter med naivt at udregne den $B_{j+1}$ længst til højre i bitstrengen, $B_{n-m}$. Derefter beregner vi $B_j$ baglæns:
 
@@ -220,35 +245,6 @@ $$
 $$
 
 Således kan vi beregne $B_{n-m}$ i $\O{m}$ tid og herefter alle de resterende $B_j$ frem til $B_0$ i hver $\O{1}$ tid, som giver os en endelig køretid på $\O{n*1 + m} = \O{n}$.
-
-
-\subsection{Pattern Matching: Polynomier}
-Vi har samme typer bitstrenge $(a_0, \dots, a_{m-1})$ og $b$ som før. Nu definerer vi:
-$$
-  A(x) = \sum_{i \in [m]} a_i x^i
-  \longspace
-  B_j(x) = \sum_{i \in [m]} b_{j+i} x^i
-$$
-
-Nu ønsker vi at bestemme $A(x) \? B_j(x)$, hvilket svarer til at de to bitstrenge er ens.
-
-Vi starter med at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
-$$
-  A(r) \? B_j(r) \pmod p
-$$
-
-Da får vi at graden af $B$ er $n$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
-$$
-  \P{\text{FP}}
-  = \P{A(r) = B_j(r) \ | A \neq B_j}
-  \leq \frac{n}{p}
-  \leq \frac{n}{n^2}
-  = \frac{1}{n}
-$$
-
-\TODO{Spørg til hvad der er fidusen ved denne. At vi skal kommunikere få bits eller lav køretid? Spørg til om vi tager udgangspunkt i $B$ er $n$ eller $m$ langt, og om vi kigger på $B$ eller $B_j$.}
-
-Note: Man kan også lave næsten samme trick for at sammenligne to sæt af tal, men med deres produkt i stedet. Forventes dog ikke til eksamen.
 
 
 
