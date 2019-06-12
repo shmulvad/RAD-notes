@@ -14,7 +14,7 @@
 \item \textbf{Set balancing}
 \begin{itemize}
   \item Håndkørsel af algoritme
-  \item Bevis for lav sandsynlighed for dårligt resultat
+  \item Bevis for sandsynlighed for tilpas afvigende resultat
 \end{itemize}
 \end{itemize}
 
@@ -27,6 +27,291 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Eksamensdisposition - Kapitel 4}
+
+\section{Chernoff Bounds}
+\subsection{Case for $\P{X > (1 + \delta) \mu}$}
+Givet uafhængige Poisson trials $X_1, \dots, X_n$, dvs. for $i = 1, \dots, n$, lad $X_i$ være en indikatorvariabel med $\P{X_i = 1} = p_i$ hvor $0 < p_i < 1$. Lad
+$$
+\delta > 0
+\quad\quad\quad\quad
+X = \sum_{i=1}^n X_i
+\quad\quad\quad\quad
+\mu = \mu_X = \sum_{i=1}^n p_i
+$$
+Da gælder:
+\begin{align*}
+  \P{X > (1+\delta) \mu} < \pfrac{e^\delta}{(1+\delta)^{1 + \delta}}^\mu
+\end{align*}
+
+
+\subsubsection{Bevis}
+Lad $t > 0$ (fastlægges senere til $t = \ln(1 + \delta)$). Da gælder:
+\begin{align}
+  \P{X > (1+\delta) \mu}
+  &= \P{e^{tX} > e^{t(1+\delta) \mu}} \label{eq:i-ete} \\
+  &< \frac{\E{e^{tX}}}{e^{t(1+\delta) \mu}} \label{eq:bruger-markov} \\
+  &= \frac{\E{\prod_{i=1}^n e^{t X_i}}}{e^{t(1+\delta) \mu}} \label{eq:stok-var} \\
+  &= \frac{\prod_{i=1}^n \E{e^{t X_i}}}{e^{t(1+\delta) \mu}} \label{eq:uafhaang} \\
+  &= \frac{\prod_{i=1}^n \p{p_i e^t + (1-p_i) e^0 }}{e^{t(1+\delta) \mu}} \label{eq:brug-exp} \\
+  &= \frac{\prod_{i=1}^n \p{1 + p_i (e^t - 1)}}{e^{t(1+\delta) \mu}} \label{eq:reducer} \\
+  &\leq \frac{\prod_{i=1}^n e^{p_i (e^t - 1)}}{e^{t(1+\delta) \mu}} \label{eq:brug-1+x-regel} \\
+  &= \frac{e^{\p{\sum_{i=1}^n p_i (e^t - 1)}}}{e^{t(1+\delta) \mu}} \label{eq:prod-til-sum} \\
+  &= \frac{e^{\mu (e^t - 1)}}{e^{t(1+\delta) \mu}} \label{eq:beregn-sum} \\
+  &= \frac{e^{\delta \mu}}{(1 + \delta)^{(1 + \delta) \mu}} \label{eq:indsaat-t} \\
+  &= \pfrac{e^\delta}{(1 + \delta)^{1 + \delta}}^\mu \label{eq:reducer-potens}
+\end{align}
+
+I \cref{eq:i-ete} opløfter vi $e$ med vores udtryk, hvorved uligheden stadig gælder. Dette er blot noget som skal memoreres til eksamen.\\
+I \cref{eq:bruger-markov} bruger vi Markovs ulighed.\\
+I \cref{eq:stok-var} bruger vi definitionen for $X$, og bestemmer produktet i stedet for summen da den står i en potens.
+I \cref{eq:uafhaang} benytter vi at vores stokastiske variable er uafhængige, og derfor kan vi flytte vores forventning ind i produktet.\\
+I \cref{eq:brug-exp} benytter vi definitonen på forventningsværdien og egenskaberne for Poisson trials.\\
+I \cref{eq:reducer} reducerer vi blot udtrykket.\\
+I \cref{eq:brug-1+x-regel} benytter vi reglen $1 + x \leq e^x \ \forall x \in \R$.\\
+I \cref{eq:prod-til-sum} har vi, at produktet af en masse udtryk med samme base svarer til summen af alle potenserne.\\
+I \cref{eq:beregn-sum} benytter vi vores definition af $\mu$.\\
+I \cref{eq:indsaat-t} indsætter vi vores $t = \ln(1 + \delta)$ så vores udtryk bliver pænt.\\
+I \cref{eq:reducer-potens} sætter vi blot $\mu$ uden for en parentes for brøken.
+
+
+
+\subsection{Case for $\P{X < (1 - \delta) \mu}$}
+Givet uafhængige Poisson trials $X_1, \dots, X_n$, dvs. for $i = 1, \dots, n$, lad $X_i$ være en indikatorvariabel med $\P{X_i = 1} = p_i$ hvor $0 < p_i < 1$. Lad
+$$
+0 < \delta \leq 1
+\quad\quad\quad\quad
+X = \sum_{i=1}^n X_i
+\quad\quad\quad\quad
+\mu = \mu_X = \sum_{i=1}^n p_i
+$$
+Da gælder:
+\begin{align}
+  \P{X < (1 - \delta) \mu} < e^{- \frac{\delta^2 \mu}{2}} \label{eq:chernoff-2}
+\end{align}
+
+
+\subsubsection{Bevis}
+Lad $t > 0$ (fastlægges senere til $t = - \ln(1 - \delta)$). Da gælder:
+\begin{align}
+  \P{X < (1 - \delta) \mu}
+  &= \P{e^{- t X} > e^{-t (1 - \delta) \mu} } \label{eq:ref1} \\
+  % &< \frac{\E{e^{-t X}}}{e^{-t (1 - \delta) \mu}} \nonumber \\
+  % &= \frac{\prod_{i=1}^n \E{e^{-t X_i}}}{e^{-t (1 - \delta) \mu}} \nonumber \\
+  % &= \frac{\prod_{i=1}^n \p{p_i e^{-t} + (1 - p_i) e^0}}{e^{-t (1 - \delta) \mu}} \nonumber \\
+  % &= \frac{\prod_{i=1}^n \p{1 + p_i (e^{-t} -1)}}{e^{-t (1 - \delta) \mu}} \nonumber \\
+  % &\leq \frac{\prod_{i=1}^n e^{p_i (e^{-t} - 1)}  }{e^{-t (1 - \delta) \mu}} \nonumber \\
+  &< \frac{e^{\mu(e^{-t} - 1)}  }{e^{-t (1 - \delta) \mu}} \label{eq:ref2} \\
+  &= \frac{e^{- \delta \mu}  }{ (1 - \delta)^{(1 - \delta) \mu} } \label{eq:indsaat-neg-t} \\
+  &= \pfrac{e^{-\delta}}{(1 - \delta)^{1 - \delta}}^\mu \nonumber \\
+  &= \pfrac{e^{-\delta}}{e^{(1 - \delta) \ln (1 - \delta)}}^\mu \label{eq:omskriver} \\
+  &< \pfrac{e^{- \delta}}{e^{- \delta + \frac{1}{2} \delta^2}}^\mu \label{eq:mclaurin} \\
+  &= e^{- \frac{1}{2} \delta^2 \mu} \label{eq:pot-regne-regler}
+\end{align}
+
+Fra \cref{eq:ref1} til \cref{eq:ref2} gør vi stort set det samme vi gjorde som før. I \cref{eq:indsaat-neg-t} indsætter vi så $t = - \ln(1 - \delta)$ (dette gælder egentlig kun for $\delta < 1$, men udtrykket kan dog let bevises når $\delta = 1$). I \cref{eq:omskriver} omskriver vi blot for at få noget med $e$ i nævneren. I \cref{eq:mclaurin} benytter vi McLaurin expansion, som medfører at $(1 - \delta) \ln(1 - \delta) > - \delta + \frac{1}{2} \delta^2$. Og endelig i \cref{eq:pot-regne-regler} er det blot simple potensregneregler.
+
+\subsubsection{McLaurin Expansion}
+Givet en funktion $f(x) : \R \to \R$, som er vilkårligt ofte differentiabel i $x = 0$, da gælder:
+$$
+f(x) = \sum_{i=0}^n \frac{f^{(i)} (0)}{i!} x^i
+$$
+hvor f.eks. $f^{(3)} (0)$ betegner $f'''(0)$.\\
+
+For vores konkrete case ovenfor betyder det:
+$$
+(1 - \delta) \ln(1 - \delta)
+= - \delta + \frac{1}{2} \delta^2 + \frac{1}{6} \delta^3 + \frac{1}{12} \delta^4 + \frac{1}{20} \delta^5 + \dots > - \delta + \frac{1}{2} \delta^2
+$$
+
+
+
+
+
+
+\section{Set Balancing}
+\subsection{Problem}
+
+Givet en $n \times n$ $0/1$-matrix $\mathbf A$, find vektor $\mathbf b \in \curly{-1, 1}^n$ så $||\mathbf{Ab}||_\infty$ (udtales infinity-normen) bliver så lille som mulig. Eksempelvis kunne vi have:
+\begin{alignat*}{5}
+  &\begin{bmatrix}
+  0 & 1 & 1\\
+  1 & 0 & 1\\
+  1 & 1 & 1
+  \end{bmatrix}
+  &&\begin{bmatrix}
+  -1\\
+  1\\
+  1
+  \end{bmatrix}
+  =
+  &&\begin{bmatrix}
+  2\\
+  0\\
+  1
+  \end{bmatrix}
+  \quad\quad &&\rightarrow \quad\quad
+  &&||\mathbf{Ab}||_\infty = 2\\
+  %%%%%%%%%%%%%%%%%%%%%%%
+  &\quad\quad \mathbf A
+  &&\quad \ \mathbf b
+  && \ \mathbf{Ab}\\
+  %%%%%%%%%%%%%%%%%%%%%%%
+  &
+  &&\begin{bmatrix}
+  -1\\
+  -1\\
+  1
+  \end{bmatrix}
+  =
+  &&\begin{bmatrix}
+  0\\
+  0\\
+  -1
+  \end{bmatrix}
+  \quad\quad &&\rightarrow \quad\quad
+  &&||\mathbf{Ab'}||_\infty = 1\\
+  %%%%%%%%%%%%%%%%%%%%%%%
+  &
+  &&\quad \ \mathbf b'
+  && \ \mathbf{Ab'}\\
+\end{alignat*}
+
+Her er f.eks. $||\mathbf{Ab}||_\infty = 2$ da den er defineret som den numerisk største værdi i vektor $\mathbf{Ab}$.\\
+
+Man kan f.eks. forstå problemet som at matrix $\mathbf A$ i søjlerne har en række individer, og i rækkerne har en værdi for om besidder en bestemt egenskab eller ej. Så vil vi gerne dele individerne i to grupper, som skal sikre så jævn fordeling af egenskaberne som muligt. $||\mathbf{Ab}||_\infty$ er da et udtryk for den egenskab der er mest ujævnt fordelt.
+
+
+
+
+
+
+\subsection{Algoritme}
+Vælg indgang $i$ i $\mathbf b$ til $-1$ med sandsynlighed $1/2$ og ellers $1$ for alle $i$ uafhængigt.
+
+
+
+
+
+
+\subsection{Analyse af sandsynlighed for $||\mathbf{Ab}||_\infty \leq 2 \sqrt{2 n \ln n}$}
+Betragt række $j$ i $\mathbf A$, $\mathbf A_j$. Antag at $\mathbf A_j$ er på følgende form, som er en gyldig måde at anskue det på så længe vi kun kigger på én række, da vi i vores analyse bare kunne flytte alle 1-taller i $\mathbf A_j$ til venstre og så have de resterende 0-taller til højre:
+$$
+\mathbf A_j = [ \; \underbrace{1 \; \dots \; 1}_{k} \; \underbrace{0 \; \dots \; 0}_{n-k} \; ]
+$$
+
+Alle 0-taller kan vi da ignorere, da de ikke vil bidrage til summen i vores analyse.\\
+For $i = 1, \dots, k$, lad da indikatorvariablen $X_i$ være
+$$
+X_i
+=
+\begin{cases}
+	1 & \text{hvis $b_i = -1$}\\
+	0 & \text{ellers (dvs. $b_i = 1$)}\\
+\end{cases}
+$$
+
+Lad nu
+$$
+X = \sum_{i=1}^k X_i \quad\quad\quad\quad \mu_X = k * \P{X_i = 1} = \frac{k}{2}
+$$
+
+
+Vi får $\mathbf A_j \mathbf b = 0$ når de første $k$ indgange i $\mathbf b$ er præcis ligeligt fordelte mellem at være $-1$ og $1$:
+
+\[
+  \setlength{\arraycolsep}{0pt}
+  \mathbf{b} =
+    \left[
+      \begin{array}{c}
+        \begin{array}{c}
+          -1 \\ -1 \\ 1 \\ 1
+        \end{array} \\
+        \begin{array}{c}
+          \vdots
+        \end{array}
+      \end{array}
+    \right]
+  ~ % Some space
+  \begin{array}{c}
+    \noleftdelimiter
+    \vphantom{\begin{array}{c}
+      -1 \\ -1 \\ 1 \\ 1
+    \end{array}}
+    \right\} k \\
+    %\noleftdelimiter
+    \vphantom{\begin{array}{c}
+      \vdots
+    \end{array}}
+    %\right\} n - k
+  \end{array}
+\]
+
+
+Altså får vi:
+
+\begin{align}
+  \P{\mathbf A_j \mathbf b = 0} &= \P{X = \frac{k}{2}} \nonumber \\
+  \P{\mathbf A_j \mathbf b = 2} &= \P{X = \frac{k}{2} - 1} \nonumber \\
+  &\vdots \nonumber \\
+  \P{\mathbf A_j \mathbf b = 2c} &= \P{X = \frac{k}{2} - c} \nonumber \\
+  &\Updownarrow \nonumber \\
+  \P{\mathbf A_j \mathbf b > 2c} &= \P{X < \frac{k}{2} - c} \label{eq:moenster-prob}
+\end{align}
+Da hvis vi gør $c$-værdien meget stor, så betyder det at vi har meget få $-1$'ere, dvs. $\mathbf A_j \mathbf b$ bliver stor.\\
+
+Nu benytter vi \cref{eq:chernoff-2}, hvor der skal gælde $0 < \delta \leq 1$:
+\begin{align}
+  \P{X < (1 - \delta) \mu } < e^{- \frac{\delta^2 \mu}{2} } = e^{- \frac{\delta^2 k}{4} } = \frac{1}{n^2} \label{eq:set-balance}
+\end{align}
+
+Når vi vælger $\delta^2 = \frac{8 \ln n}{k} \Longrightarrow \delta = 2 \sqrt{\frac{2 \ln n}{k}}$.\\
+
+Skriver vi videre på venstresiden af \cref{eq:set-balance} får vi:
+\begin{align}
+  \P{X < (1 - \delta) \mu }
+  &= \P{X < \frac{k}{2} - \delta \mu } \label{eq:indsaat-vaardi-for-mu} \\
+  &= \P{\mathbf A_j \mathbf b > 2 \delta \mu} \label{eq:brug-tidligere-eq} \\
+  &= \P{\mathbf A_j \mathbf b > k \delta} \nonumber \\
+  &= \P{\mathbf A_j \mathbf b > 2 \sqrt{2 k \ln n}} \label{eq:brug-vaardi-for-delta} \\
+  &\geq \P{\mathbf A_j \mathbf b > 2 \sqrt{2 n \ln n}} \label{eq:saat-k-til-n}
+\end{align}
+
+I \cref{eq:indsaat-vaardi-for-mu} ganger vi parentesen ud og indsætter vores værdi for $\mu$ på leddet uden $\delta$.\\
+I \cref{eq:brug-tidligere-eq} benytter vi hvad vi fandt frem til i \cref{eq:moenster-prob}.\\
+I \cref{eq:brug-vaardi-for-delta} indsætter vi vores værdier for $k$ og $\delta$.\\
+I \cref{eq:saat-k-til-n} benytter vi, at der ikke kan være flere 1-taller end længden af vektor $\mathbf b$, altså $k \leq n$. Herved bliver uligheden sværere at opfylde, så sandsynligheden falder.\\
+
+
+Hermed har vi altså vist, at for en række $\mathbf A_j$ har vi følgende, hvor medfører pilen gælder ved symmetri:
+$$
+\P{\mathbf A_j \mathbf b > 2 \sqrt{2 n \ln n}} < \frac{1}{n^2}
+\Longleftrightarrow
+\P{\mathbf A_j \mathbf b < - 2 \sqrt{2 n \ln n}} < \frac{1}{n^2}
+$$
+
+Vi kan nu bruge union bound til at få:
+$$
+\P{|\mathbf A_j \mathbf b| > 2 \sqrt{2 n \ln n}} < \frac{2}{n^2}
+$$
+
+Går vi nu videre fra bare at kigge på en række $\mathbf A_i$ til hele matrix $\mathbf A$ får vi, igen ved union bound, at:
+\begin{align*}
+  \P{||\mathbf{Ab}||_\infty > 2 \sqrt{2 n \ln n}}
+  = \P{ \bigcup_{j=1}^n  \curly{|\mathbf A_j \mathbf b| > 2 \sqrt{2 n \ln n}} }
+  \leq n * \frac{2}{n^2}
+  = \frac{2}{n}
+\end{align*}
+
+
+
+Altså har vi nu vist, at med sandsynlighed $\geq 1 - \frac{2}{n}$ gælder $||\mathbf{Ab}||_\infty \leq 2 \sqrt{2 n \ln n}$.
+
+
+
+
+
+
+
 
 
 \end{document}

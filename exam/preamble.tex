@@ -109,10 +109,6 @@
 % A fraction, but with dynamic () around
 \newcommand{\pfrac}[2]{ \p{ \frac{#1}{#2} } }
 
-% Circle and square icons
-\def\mcirc{\mathbin{\scalerel*{\bigcirc}{t}}}
-\def\msquare{\mathord{\scalerel*{\Box}{gX}}}
-
 % Parentheses a very specific height
 \makeatletter
 \newcommand*{\bigsl}[1]{{\hbox{$\left#1\vbox to29\p@{}\right.\n@space$}}}
@@ -124,5 +120,9 @@
 
 % Equals sign with question mark above it
 \newcommand{\?}{\stackrel{?}{=}}
+
+% Circle and square icons
+\def\mcirc{\mathbin{\scalerel*{\bigcirc}{t}}}
+\def\msquare{\mathord{\scalerel*{\Box}{gX}}}
 
 \author{Søren Mulvad, rbn601}
