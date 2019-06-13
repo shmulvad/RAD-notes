@@ -199,8 +199,6 @@ $$
   B(x) = \sum_{i \in [m]} b_i x^i
 $$
 
-Nu ønsker vi at bestemme $A(x) \? B(x)$, hvilket svarer til at de to bitstrenge er ens.
-
 Vi starter med deterministisk at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
 $$
   A(r) \? B(r) \pmod p
@@ -233,11 +231,10 @@ Fidusen er at vi finder produktet, så derved bliver rækkefølgen ligegyldig.
 
 
 \subsection{Pattern matching: Efficient Fingerprints}
-Vi ønsker at tjekke om der findes et $j$ så:
+Givet $a = (a_0, \dots, a_{m-1})$ og $b = (b_0, \dots, b_{n-1})$ hvor $m \leq n$ ønsker vi at tjekke om der findes et $j$ så:
 $$
-  (a_0, \dots, a_{m-1}) \? (b_j, \dots, b_{j+m-1}) = B_j
+  a \? (b_j, \dots, b_{j+m-1}) = B_j
 $$
-hvor $m \leq n$.\\
 
 Vi vælger uniformt tilfældigt et $p < n^2$. Herefter beregner vi så $a \bmod p$. Derudover ønsker vi at beregne alle $B_j \bmod p$ i $O(n)$ tid, hvilket vi både udregner i baglæns rækkefølge og hvor vi aflæser deres bitstreng baglæns.\\
 
