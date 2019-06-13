@@ -196,12 +196,12 @@ Vi har samme typer bitstrenge $(a_0, \dots, a_{m-1})$ og $b$ som før. Nu define
 $$
   A(x) = \sum_{i \in [m]} a_i x^i
   \longspace
-  B_j(x) = \sum_{i \in [m]} b_{j+i} x^i
+  B(x) = \sum_{i \in [m]} b_i x^i
 $$
 
 Nu ønsker vi at bestemme $A(x) \? B(x)$, hvilket svarer til at de to bitstrenge er ens.
 
-Vi starter med at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
+Vi starter med deterministisk at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
 $$
   A(r) \? B(r) \pmod p
 $$
@@ -209,7 +209,7 @@ $$
 Da får vi at graden af $B$ er $n$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
 $$
   \P{\text{FP}}
-  = \P{A(r) = B(r) \ | A \neq B_j}
+  = \P{A(r) = B(r) \ | A \neq B}
   \leq \frac{n}{p}
   \leq \frac{n}{n^2}
   = \frac{1}{n}
