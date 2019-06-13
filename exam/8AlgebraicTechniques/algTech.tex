@@ -6,13 +6,18 @@
 
 \begin{itemize}
   \item \textbf{Freivalds teknik: Matrixprodukt verificering}
-  \item \textbf{Freivalds teknik: Polynomial identitet}
-  \item \textbf{Schwartz-Zippel Theorem: Multivariabel polynomial identitet}
-  \item \textbf{Streng-lighed 1: (mod p) fingerprint}
   \item \textbf{Streng-lighed 2: Freivald (Polynomier)}
   \item \textbf{Sæt-lighed med produkter}
   \item \textbf{Pattern Matching: Efficient Fingerprints}
 \end{itemize}
+
+Hvis tid:
+\begin{itemize}
+  \item \textbf{Freivalds teknik: Polynomial identitet}
+  \item \textbf{Schwartz-Zippel Theorem: Multivariabel polynomial identitet}
+  \item \textbf{Streng-lighed 1: (mod p) fingerprint}
+\end{itemize}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,7 +42,7 @@ Da siger vi ''$\mathbf C = \mathbf{AB}$'' hvis $\mathbf{Cr} = \mathbf A (\mathbf
 Det smarte er, at vi kan beregne produktet af en matrix og en vektor i $O(n^2)$ tid.
 
 
-\subsection{Analyse}
+\subsection{Sandsynlighed for false positive}
 Vi ønsker nu at kigge på sandsynligheden for en false positive (algoritmen verificerer en forkert $\mathbf C$).
 
 Det har vi når $\mathbf D = \mathbf{AB} - \mathbf C \neq 0^{n \times n}$, men vi samtidig i vores algoritme fik $\mathbf{Dr} = 0^n$.\\
@@ -80,6 +85,88 @@ I \cref{eq:benyt-unikt-rj} benytter vi at alle indgange i $\mathbf r$ er uafhæn
 Vi ser, at vi kan få vores fejlsandsynlighed ned på $\leq 1/2^t$ ved at lave $t$ uafhængige verifikationer i alt med en køretid på $O(t n^2)$.
 
 
+\subsection{Streng-lighed 2: Freivald (Polynomier)}
+Vi har to bitstrenge $a = (a_0, \dots, a_{m-1})$ og $b = (b_0, \dots, b_{m-1})$. Nu definerer vi:
+$$
+  A(x) = \sum_{i \in [m]} a_i x^i
+  \longspace
+  B(x) = \sum_{i \in [m]} b_i x^i
+$$
+
+Vi starter med deterministisk at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
+$$
+  A(r) \? B(r) \pmod p
+$$
+
+Fidusen er, at så kan vi tjekke om bitstrenge er ens ved kun at sende lidt over $2 \lg n$ bits.\\
+
+Vi får at graden af $A$ og $B$ er $d = n$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
+$$
+  \P{\text{FP}}
+  = \P{A(r) = B(r) \ | A \neq B}
+  \leq \frac{n}{p}
+  \leq \frac{n}{n^2}
+  = \frac{1}{n}
+$$
+
+\subsection{Sæt-lighed med produkter}
+Vi kan modificere en smule på ovenstående algoritme for at tjekke om to sæt er ens:
+
+$$
+  a = \{a_0, \dots, a_{m-1} \}
+  \?
+  \{b_0, \dots, b_{m-1} \} = b
+$$
+ved at vælge et $r$ uniformt i en finit mængde $\mathbb S$ og derefter beregne:
+$$
+  \prod_{i \in [m]} (r - a_i) \?
+  \prod_{i \in [m]} (r - b_i)
+$$
+
+Fidusen er at vi finder produktet, så derved bliver rækkefølgen ligegyldig.
+
+
+
+
+
+
+\subsection{Pattern matching: Efficient Fingerprints}
+Givet $a = (a_0, \dots, a_{m-1})$ og $b = (b_0, \dots, b_{n-1})$ hvor $m \leq n$ ønsker vi at tjekke om der findes et $j$ så:
+$$
+  a \? (b_j, \dots, b_{j+m-1}) = B_j
+$$
+
+Vi vælger uniformt tilfældigt et $p < n^2$. Herefter beregner vi så $a \bmod p$. Derudover ønsker vi at beregne alle $B_j \bmod p$ i $O(n)$ tid, hvilket vi både udregner i baglæns rækkefølge og hvor vi aflæser deres bitstreng baglæns.\\
+
+Vi starter med naivt at udregne den $B_{j+1}$ længst til højre i bitstrengen, $B_{n-m}$. Derefter beregner vi $B_j$ baglæns:
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.3\textwidth]{pattern-matching.pdf}
+  \end{center}
+  \caption{Pattern Matching bitstrenge. Læg mærke til at LSB og MSB står omvendt af hvordan vi normalt ville læse det, da vi udregner det baglæns.}
+  \label{fig:pattern}
+\end{figure}
+
+Vi antager at vi kender $B_{j+1}$ Da skal vi starte med at få vores mest signifikante bit $b_{j+m}$ væk, og herefter gange med 2 for at forskyde vores streng med 1. Derefter skal vi blot lægge bit $b_j$ til. Til sidst skal vi køre modulus med $p$. Altså bliver vores formel:
+
+$$
+  B_{j} \bmod p
+  = \p{2 \p{ B_{j+1} - b_{j+m} 2^{m-1} } + b_j} \bmod p
+$$
+
+Således kan vi beregne $B_{n-m}$ i $\O{m}$ tid og herefter alle de resterende $B_j$ frem til $B_0$ i hver $\O{1}$ tid, som giver os en endelig køretid på $\O{n*1 + m} = \O{n}$.
+
+
+
+
+
+
+
+
+
+\newpage
+(Hvis tid)
 \subsection{Freivalds teknik: Polynomial identitet}
 Givet to polynomier $P_1(x), P_2(x) \in \mathbb F[x]$ (legement af f.eks. réelle tal, primtal, etc) af grad $\leq d$ som black boxes, bestem da $P_1 \? P_2$.\\
 
@@ -189,74 +276,6 @@ Da må det betyde, at antal primtal $p \ | \ c$ er $\leq \lg c = n$.
 
 I \cref{eq:primtal} har vi antallet af primtal $p$ der dividerer $c$ ud af alle de mulige primtal $p < n^2$  vi kunne have valgt.\\
 I \cref{eq:primtal-saatning} benytter vi primtalssætningen der siger, at antallet af primtal mindre end tallet $x$ konvergerer mod $x / \ln x$.
-
-
-\subsection{Streng-lighed 2: Freivald (Polynomier)}
-Vi har samme typer bitstrenge $(a_0, \dots, a_{m-1})$ og $b$ som før. Nu definerer vi:
-$$
-  A(x) = \sum_{i \in [m]} a_i x^i
-  \longspace
-  B(x) = \sum_{i \in [m]} b_i x^i
-$$
-
-Vi starter med deterministisk at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
-$$
-  A(r) \? B(r) \pmod p
-$$
-
-Da får vi at graden af $B$ er $n$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
-$$
-  \P{\text{FP}}
-  = \P{A(r) = B(r) \ | A \neq B}
-  \leq \frac{n}{p}
-  \leq \frac{n}{n^2}
-  = \frac{1}{n}
-$$
-
-\subsection{Sæt-lighed med produkter}
-Vi kan modificere en smule på ovenstående algoritme for at tjekke om to sæt er ens:
-
-$$
-  a = \{a_0, \dots, a_{m-1} \}
-  \?
-  \{b_0, \dots, b_{m-1} \} = b
-$$
-ved at vælge et $r$ uniformt i en finit mængde $\mathbb S$ og derefter beregne:
-$$
-  \prod_{i \in [m]} (r - a_i) \?
-  \prod_{i \in [m]} (r - b_i)
-$$
-
-Fidusen er at vi finder produktet, så derved bliver rækkefølgen ligegyldig.
-
-
-\subsection{Pattern matching: Efficient Fingerprints}
-Givet $a = (a_0, \dots, a_{m-1})$ og $b = (b_0, \dots, b_{n-1})$ hvor $m \leq n$ ønsker vi at tjekke om der findes et $j$ så:
-$$
-  a \? (b_j, \dots, b_{j+m-1}) = B_j
-$$
-
-Vi vælger uniformt tilfældigt et $p < n^2$. Herefter beregner vi så $a \bmod p$. Derudover ønsker vi at beregne alle $B_j \bmod p$ i $O(n)$ tid, hvilket vi både udregner i baglæns rækkefølge og hvor vi aflæser deres bitstreng baglæns.\\
-
-Vi starter med naivt at udregne den $B_{j+1}$ længst til højre i bitstrengen, $B_{n-m}$. Derefter beregner vi $B_j$ baglæns:
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[width=0.3\textwidth]{pattern-matching.pdf}
-  \end{center}
-  \caption{Pattern Matching bitstrenge. Læg mærke til at LSB og MSB står omvendt af hvordan vi normalt ville læse det, da vi udregner det baglæns.}
-  \label{fig:pattern}
-\end{figure}
-
-Vi antager at vi kender $B_{j+1}$ Da skal vi starte med at få vores mest signifikante bit $b_{j+m}$ væk, og herefter gange med 2 for at forskyde vores streng med 1. Derefter skal vi blot lægge bit $b_j$ til. Til sidst skal vi køre modulus med $p$. Altså bliver vores formel:
-
-$$
-  B_{j} \bmod p
-  = \p{2 \p{ B_{j+1} - b_{j+m} 2^{m-1} } + b_j} \bmod p
-$$
-
-Således kan vi beregne $B_{n-m}$ i $\O{m}$ tid og herefter alle de resterende $B_j$ frem til $B_0$ i hver $\O{1}$ tid, som giver os en endelig køretid på $\O{n*1 + m} = \O{n}$.
-
 
 
 \end{document}
