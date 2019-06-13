@@ -49,20 +49,20 @@ Lad $t > 0$ (fastlægges senere til $t = \ln(1 + \delta)$). Da gælder:
 \begin{align}
   \P{X > (1+\delta) \mu}
   &= \P{e^{tX} > e^{t(1+\delta) \mu}} \label{eq:i-ete} \\
-  &< \frac{\E{e^{tX}}}{e^{t(1+\delta) \mu}} \label{eq:bruger-markov} \\
-  &= \frac{\E{\prod_{i=1}^n e^{t X_i}}}{e^{t(1+\delta) \mu}} \label{eq:stok-var} \\
-  &= \frac{\prod_{i=1}^n \E{e^{t X_i}}}{e^{t(1+\delta) \mu}} \label{eq:uafhaang} \\
-  &= \frac{\prod_{i=1}^n \p{p_i e^t + (1-p_i) e^0 }}{e^{t(1+\delta) \mu}} \label{eq:brug-exp} \\
-  &= \frac{\prod_{i=1}^n \p{1 + p_i (e^t - 1)}}{e^{t(1+\delta) \mu}} \label{eq:reducer} \\
-  &\leq \frac{\prod_{i=1}^n e^{p_i (e^t - 1)}}{e^{t(1+\delta) \mu}} \label{eq:brug-1+x-regel} \\
-  &= \frac{e^{\p{\sum_{i=1}^n p_i (e^t - 1)}}}{e^{t(1+\delta) \mu}} \label{eq:prod-til-sum} \\
-  &= \frac{e^{\mu (e^t - 1)}}{e^{t(1+\delta) \mu}} \label{eq:beregn-sum} \\
-  &= \frac{e^{\delta \mu}}{(1 + \delta)^{(1 + \delta) \mu}} \label{eq:indsaat-t} \\
-  &= \pfrac{e^\delta}{(1 + \delta)^{1 + \delta}}^\mu \label{eq:reducer-potens}
+  &< \frac{\E{e^{tX}}}{e^{t(1+\delta) \mu}} \label{eq:bruger-markov}
+\end{align}
+I \cref{eq:i-ete} opløfter vi $e$ med vores udtryk, hvorved uligheden stadig gælder og i \cref{eq:bruger-markov} bruger vi Markovs ulighed. Lad os nu regne videre på nævneren i \cref{eq:bruger-markov}:
+\begin{align}
+  \E{e^{tX}}
+  &= \E{\prod_{i=1}^n e^{t X_i}} \label{eq:stok-var}\\
+  &= \prod_{i=1}^n \E{e^{t X_i}} \label{eq:uafhaang}\\
+  &= \prod_{i=1}^n \p{p_i e^t + (1-p_i) e^0 } \label{eq:brug-exp}\\
+  &= \prod_{i=1}^n \p{1 + p_i (e^t - 1)} \label{eq:reducer}\\
+  &\leq \prod_{i=1}^n e^{p_i (e^t - 1)} \label{eq:brug-1+x-regel}\\
+  &= e^{\p{\sum_{i=1}^n p_i (e^t - 1)}} \label{eq:prod-til-sum} \\
+  &= e^{\mu (e^t - 1)} \label{eq:beregn-sum}
 \end{align}
 
-I \cref{eq:i-ete} opløfter vi $e$ med vores udtryk, hvorved uligheden stadig gælder. Dette er blot noget som skal memoreres til eksamen.\\
-I \cref{eq:bruger-markov} bruger vi Markovs ulighed.\\
 I \cref{eq:stok-var} bruger vi definitionen for $X$, og bestemmer produktet i stedet for summen da den står i en potens.
 I \cref{eq:uafhaang} benytter vi at vores stokastiske variable er uafhængige, og derfor kan vi flytte vores forventning ind i produktet.\\
 I \cref{eq:brug-exp} benytter vi definitonen på forventningsværdien og egenskaberne for Poisson trials.\\
@@ -70,6 +70,16 @@ I \cref{eq:reducer} reducerer vi blot udtrykket.\\
 I \cref{eq:brug-1+x-regel} benytter vi reglen $1 + x \leq e^x \ \forall x \in \R$.\\
 I \cref{eq:prod-til-sum} har vi, at produktet af en masse udtryk med samme base svarer til summen af alle potenserne.\\
 I \cref{eq:beregn-sum} benytter vi vores definition af $\mu$.\\
+
+Indsætter vi denne værdi tilbage i \cref{eq:bruger-markov} får vi:
+
+\begin{align}
+  \frac{\E{e^{tX}}}{e^{t(1+\delta) \mu}}
+  &\leq \frac{e^{\mu (e^t - 1)}}{e^{t(1+\delta) \mu}}\\
+  &= \frac{e^{\delta \mu}}{(1 + \delta)^{(1 + \delta) \mu}} \label{eq:indsaat-t} \\
+  &= \pfrac{e^\delta}{(1 + \delta)^{1 + \delta}}^\mu \label{eq:reducer-potens}
+\end{align}
+
 I \cref{eq:indsaat-t} indsætter vi vores $t = \ln(1 + \delta)$ så vores udtryk bliver pænt.\\
 I \cref{eq:reducer-potens} sætter vi blot $\mu$ uden for en parentes for brøken.
 
