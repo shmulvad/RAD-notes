@@ -5,8 +5,6 @@
 \maketitle
 
 \begin{itemize}
-  \item \textbf{Markovs ulighed}
-  \item \textbf{Chebyshevs ulighed}
   \item \textbf{Two-point sampling}
   \begin{itemize}
     \item Algoritme 1
@@ -18,6 +16,7 @@
     \item Forventet antal runder
     \item Sandsynlighed for flere end $r$ runder
   \end{itemize}
+  \item \textbf{Markovs ulighed og Chebyshevs ulighed (hvis tid)}
 \end{itemize}
 
 
@@ -29,62 +28,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Eksamensdisposition - Kapitel 3}
-
-\subsection{Markovs ulighed}
-Givet en tilfældig variabel $X \geq 0$ og $t > 0$, så:
-\begin{align}
-  \P{X \geq t} \leq \frac{\E{X}}{t} \label{eq:markov}
-\end{align}
-
-Såfremt $\E{X} \neq 0$ og $k > 0$ kan vi omskrive det til:
-$$
-\mathbb{P} \Big[X \geq \underbrace{k * \E{X}}_{t} \Big] \leq \frac{1}{k}
-$$
-
-\textit{\textbf{Bevis:}}
-\begin{align}
-  \E{X}
-  &= \sum_x x \P{X = x} \nonumber \\
-  &\geq \sum_{x \geq t} x \P{X = x} \label{eq:summer-x-over-t} \\
-  &\geq \sum_{x \geq t} t \P{X = x} \label{eq:summer-t-over-t} \\
-  &= t \P{X \geq t} \label{eq:markov-res}
-\end{align}
-
-Hvor uligheden i \cref{eq:summer-x-over-t} gælder da vi antager $X \geq 0$ og vi summerer over potentielt færre led, uligheden i \cref{eq:summer-t-over-t} gælder da $t \leq x$ i vores summering, og \cref{eq:markov-res} gælder da vi blot indsætter $x \geq t$ fra vores summering i selve sandsynligheden.
-
-\subsection{Chebyshevs ulighed}
-Givet en tilfældig variabel $X$ med forventet værdi $\mu_X$, hvor $\sigma_X > 0$ og $t > 0$, så:
-\begin{align}
-  \P{|X - \mu_X| \geq t \sigma_X} \leq \frac{1}{t^2} \label{eq:chebyshev}
-\end{align}
-
-\textit{\textbf{Bevis:}}
-\begin{align}
-  \P{|X - \mu_X| \geq t \sigma_X}
-  &= \P{(X - \mu_X)^2 \geq t^2 {\sigma_X}^2} \nonumber \\
-  &\leq \frac{\E{(X - \mu_X)^2}}{t^2 {\sigma_X}^2} \label{eq:bruger-markov} \\
-  &= \frac{{\sigma_X}^2}{t^2 {\sigma_X}^2} \label{eq:varians-def} \\
-  &= \frac{1}{t^2} \nonumber
-\end{align}
-
-Her benytter vi Markovs ulighed i \cref{eq:bruger-markov} og selve definitionen på varians $\sigma^2$ i \cref{eq:varians-def}.
-
-\begin{figure}[H]
-  \begin{center}
-  \includegraphics[width=0.4\textwidth]{chebyshev.pdf}
-  \end{center}
-  \caption{Illustration af Chebyshevs ulighed. Summen af de skraverede områder er $\leq 1/t^2$.}
-  \label{fig:chebyshev}
-\end{figure}
-
-
-
-
-
-
-
-
-
 
 \section{Two-point Sampling}
 Et decision-problem kan repræsenteres om en delmængde (et sprog) $L \subseteq \{0, 1\}^\ast = \{\emptyset, 0, 1, 00, 01, \dots \}$.
@@ -199,13 +142,13 @@ $$
 
 Bruger vi, at dette er geometrisk distribueret får vi:
 $$
-  \mu_{Y_i} = \frac{1}{p_i} = \frac{n}{n-i}
+  \E{Y_i} = \frac{1}{p_i} = \frac{n}{n-i}
 $$
 
 Da kan vi beregne:
 \begin{align*}
   \mu_Y
-  = \sum_{i=0}^{n-1} \mu_{Y_i}
+  = \sum_{i=0}^{n-1} \E{Y_i}
   = \sum_{i=0}^{n-1} \frac{n}{n-i}
   = n \sum_{i=1}^n \frac{1}{i}
   = n H_n
@@ -220,11 +163,11 @@ $\event_i^r$: Kupontype $i$ vælges \emph{ikke} i de første $r$ runder.\\
 
 Da er begivenheden at mindst én kupontype ikke vælges i de $r$ første runder $\bigcup_{i=1}^n \event_i^r$. Denne sandsynlighed er naturligvis ækvivalent med sandsynligheden for, at der totalt set vil være flere end $r$ runder før vi er færdig. Da kan vi bestemme sandsynligheden for flere end $r$ runder til:
 \begin{align}
-  \P{\bigcup_{i=1}^n \event_i^r}
-  &\leq \sum_{i=1}^n \P{\event_i^r} \label{eq:bruger-union-bound} \\
-  &= \sum_{i=1}^n \pfrac{n-1}{n}^r \label{eq:sandsynlighed} \\
-  &= \sum_{i=1}^n \p{1 - \frac{1}{n}}^r \nonumber \\
-  &\leq \sum_{i=1}^n \p{e^{-1/n}}^r \label{eq:1plusx}\\
+  \P{\bigcup_{i \in [n]} \event_i^r}
+  &\leq \sum_{i \in [n]} \P{\event_i^r} \label{eq:bruger-union-bound} \\
+  &= \sum_{i \in [n]} \pfrac{n-1}{n}^r \label{eq:sandsynlighed} \\
+  &= n \p{1 - \frac{1}{n}}^r \nonumber \\
+  &\leq n \p{e^{-1/n}}^r \label{eq:1plusx}\\
   &= n e^{-r/n} \nonumber
 \end{align}
 
@@ -242,6 +185,56 @@ $$
 $$
 
 Altså er sandsynligheden for at laver flere end dobbelt så mange runder som forventet relativt lille.
+
+
+\newpage
+\subsection{Markovs ulighed}
+Givet en tilfældig variabel $X \geq 0$ og $t > 0$, så:
+\begin{align}
+  \P{X \geq t} \leq \frac{\E{X}}{t} \label{eq:markov}
+\end{align}
+
+Såfremt $\E{X} \neq 0$ og $k > 0$ kan vi omskrive det til:
+$$
+\mathbb{P} \Big[X \geq \underbrace{k * \E{X}}_{t} \Big] \leq \frac{1}{k}
+$$
+
+\textit{\textbf{Bevis:}}
+\begin{align}
+  \E{X}
+  &= \sum_x x \P{X = x} \nonumber \\
+  &\geq \sum_{x \geq t} x \P{X = x} \label{eq:summer-x-over-t} \\
+  &\geq \sum_{x \geq t} t \P{X = x} \label{eq:summer-t-over-t} \\
+  &= t \P{X \geq t} \label{eq:markov-res}
+\end{align}
+
+Hvor uligheden i \cref{eq:summer-x-over-t} gælder da vi antager $X \geq 0$ og vi summerer over potentielt færre led, uligheden i \cref{eq:summer-t-over-t} gælder da $t \leq x$ i vores summering, og \cref{eq:markov-res} gælder da vi blot indsætter $x \geq t$ fra vores summering i selve sandsynligheden.
+
+\subsection{Chebyshevs ulighed}
+Givet en tilfældig variabel $X$ med forventet værdi $\mu_X$, hvor $\sigma_X > 0$ og $t > 0$, så:
+\begin{align}
+  \P{|X - \mu_X| \geq t \sigma_X} \leq \frac{1}{t^2} \label{eq:chebyshev}
+\end{align}
+
+\textit{\textbf{Bevis:}}
+\begin{align}
+  \P{|X - \mu_X| \geq t \sigma_X}
+  &= \P{(X - \mu_X)^2 \geq t^2 {\sigma_X}^2} \nonumber \\
+  &\leq \frac{\E{(X - \mu_X)^2}}{t^2 {\sigma_X}^2} \label{eq:bruger-markov} \\
+  &= \frac{{\sigma_X}^2}{t^2 {\sigma_X}^2} \label{eq:varians-def} \\
+  &= \frac{1}{t^2} \nonumber
+\end{align}
+
+Her benytter vi Markovs ulighed i \cref{eq:bruger-markov} og selve definitionen på varians $\sigma^2$ i \cref{eq:varians-def}.
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.4\textwidth]{chebyshev.pdf}
+  \end{center}
+  \caption{Illustration af Chebyshevs ulighed. Summen af de skraverede områder er $\leq 1/t^2$.}
+  \label{fig:chebyshev}
+\end{figure}
+
 
 
 
