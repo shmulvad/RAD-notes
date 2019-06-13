@@ -95,20 +95,20 @@ Lad $t > 0$ (fastlægges senere til $t = - \ln(1 - \delta)$). Da gælder:
 \begin{align}
   \P{X < (1 - \delta) \mu}
   &= \P{e^{- t X} > e^{-t (1 - \delta) \mu} } \label{eq:ref1} \\
-  % &< \frac{\E{e^{-t X}}}{e^{-t (1 - \delta) \mu}} \nonumber \\
-  % &= \frac{\prod_{i=1}^n \E{e^{-t X_i}}}{e^{-t (1 - \delta) \mu}} \nonumber \\
-  % &= \frac{\prod_{i=1}^n \p{p_i e^{-t} + (1 - p_i) e^0}}{e^{-t (1 - \delta) \mu}} \nonumber \\
-  % &= \frac{\prod_{i=1}^n \p{1 + p_i (e^{-t} -1)}}{e^{-t (1 - \delta) \mu}} \nonumber \\
-  % &\leq \frac{\prod_{i=1}^n e^{p_i (e^{-t} - 1)}  }{e^{-t (1 - \delta) \mu}} \nonumber \\
-  &< \frac{e^{\mu(e^{-t} - 1)}  }{e^{-t (1 - \delta) \mu}} \label{eq:ref2} \\
-  &= \frac{e^{- \delta \mu}  }{ (1 - \delta)^{(1 - \delta) \mu} } \label{eq:indsaat-neg-t} \\
-  &= \pfrac{e^{-\delta}}{(1 - \delta)^{1 - \delta}}^\mu \nonumber \\
+  &= \pfrac{e^{-\delta}}{(1 - \delta)^{1 - \delta}}^\mu \nonumber
+\end{align}
+
+Hvor vi gør stort set det samme som før, men havde den lidt anderledes start i \cref{eq:ref1} og derudover brugte $t = -\ln(1 - \delta)$. Lad os nu regne videre på dette:
+
+
+\begin{align}
+  \pfrac{e^{-\delta}}{(1 - \delta)^{1 - \delta}}^\mu
   &= \pfrac{e^{-\delta}}{e^{(1 - \delta) \ln (1 - \delta)}}^\mu \label{eq:omskriver} \\
   &< \pfrac{e^{- \delta}}{e^{- \delta + \frac{1}{2} \delta^2}}^\mu \label{eq:mclaurin} \\
   &= e^{- \frac{1}{2} \delta^2 \mu} \label{eq:pot-regne-regler}
 \end{align}
 
-Fra \cref{eq:ref1} til \cref{eq:ref2} gør vi stort set det samme vi gjorde som før. I \cref{eq:indsaat-neg-t} indsætter vi så $t = - \ln(1 - \delta)$ (dette gælder egentlig kun for $\delta < 1$, men udtrykket kan dog let bevises når $\delta = 1$). I \cref{eq:omskriver} omskriver vi blot for at få noget med $e$ i nævneren. I \cref{eq:mclaurin} benytter vi McLaurin expansion, som medfører at $(1 - \delta) \ln(1 - \delta) > - \delta + \frac{1}{2} \delta^2$. Og endelig i \cref{eq:pot-regne-regler} er det blot simple potensregneregler.
+I \cref{eq:omskriver} omskriver vi blot for at få noget med $e$ i nævneren. I \cref{eq:mclaurin} benytter vi McLaurin expansion, som medfører at $(1 - \delta) \ln(1 - \delta) > - \delta + \frac{1}{2} \delta^2$. Og endelig i \cref{eq:pot-regne-regler} er det blot simple potensregneregler.
 
 \subsubsection{McLaurin Expansion}
 Givet en funktion $f(x) : \R \to \R$, som er vilkårligt ofte differentiabel i $x = 0$, da gælder:
