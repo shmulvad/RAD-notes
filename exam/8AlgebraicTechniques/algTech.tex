@@ -6,7 +6,7 @@
 
 \begin{itemize}
   \item \textbf{Freivalds teknik: Matrixprodukt verificering}
-  \item \textbf{Streng-lighed 2: Freivald (Polynomier)}
+  \item \textbf{Streng-lighed 2: Polynomial identitet med fast $p$}
   \item \textbf{Sæt-lighed med produkter}
   \item \textbf{Pattern Matching: Efficient Fingerprints}
 \end{itemize}
@@ -85,12 +85,12 @@ I \cref{eq:benyt-unikt-rj} benytter vi at alle indgange i $\mathbf r$ er uafhæn
 Vi ser, at vi kan få vores fejlsandsynlighed ned på $\leq 1/2^t$ ved at lave $t$ uafhængige verifikationer i alt med en køretid på $O(t n^2)$.
 
 
-\subsection{Streng-lighed 2: Freivald (Polynomier)}
-Vi har to bitstrenge $a = (a_0, \dots, a_{m-1})$ og $b = (b_0, \dots, b_{m-1})$. Nu definerer vi:
+\subsection{Streng-lighed 2: Polynomial identitet med fast $p$}
+Vi har to bitstrenge $a = (a_0, \dots, a_{n-1})$ og $b = (b_0, \dots, b_{n-1})$. Nu definerer vi:
 $$
-  A(x) = \sum_{i \in [m]} a_i x^i
+  A(x) = \sum_{i \in [n]} a_i x^i
   \longspace
-  B(x) = \sum_{i \in [m]} b_i x^i
+  B(x) = \sum_{i \in [n]} b_i x^i
 $$
 
 Vi starter med deterministisk at vælge et primtal $p \geq n^2$ og et $r$ uniformt tilfældigt fra $[p]$. Derefter beregner vi:
@@ -100,11 +100,11 @@ $$
 
 Fidusen er, at så kan vi tjekke om bitstrenge er ens ved kun at sende lidt over $2 \lg n$ bits.\\
 
-Vi får at graden af $A$ og $B$ er $d = n$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
+Vi får at graden af $A$ og $B$ er $d = n-1$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
 $$
   \P{\text{FP}}
   = \P{A(r) = B(r) \ | A \neq B}
-  \leq \frac{n}{p}
+  \leq \frac{n-1}{p}
   \leq \frac{n}{n^2}
   = \frac{1}{n}
 $$
