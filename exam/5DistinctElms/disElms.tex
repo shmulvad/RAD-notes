@@ -39,10 +39,8 @@ $$
 
 \subsection{AMS algoritmen}
 
-Vi definerer nu for et heltal $y > 0$ funktionen zeros$(y)$ til at være antal trailing 0'er i bit-formen af $y$, som formelt er
-$$
-\text{zeros}(y) = \max\{i : y \bmod 2^i = 0\}
-$$
+Vi definerer nu for et heltal $y > 0$ funktionen zeros$(y)$ til at være antal trailing 0'er i bit-formen af $y$.\\
+
 F.eks. vil $y = 288_{10}$ give $\text{zeros}(y) = 1001 \underbrace{00000}_{zeros} = 5$ og vi ser $y \bmod 2^5 = 0$ mens $y \bmod 2^6 \neq 0$.\\
 
 
@@ -66,10 +64,12 @@ Intuitionen for algoritmen er, at vi forventer 1 ud af de $d$ unikke elementer h
 
 \subsection{Analyse af sandsynlighed for fejlafvigelse}
 
-For ethvert $j \in [n]$ og ethvert heltal $r \geq 0$, definer da begivenheden:\\
-$\event_{r,j}$: \texttt{zeros}$(h(j)) \geq r$\\
+For ethvert $j \in [n]$ og ethvert heltal $r \geq 0$, definer da indikatorvariablen:\\
+$$
+  X_{r,j} = [\mathtt{zeros}(h(j)) \geq r]
+$$
 
-Lad nu $X_{r,j}$ være en indikatorvariabel som er 1 hvis $\event_{r,j}$ er sand, 0 ellers. Lad $Y_r$ være en stokastisk variabel for et givent $r$ som beskriver antal elementer $j$ der både indgår i strømmen og opfylder $\event_{r,j}$:
+Lad $Y_r$ være en stokastisk variabel for et givent $r$ som beskriver antal elementer $j$ der både indgår i strømmen og opfylder at \texttt{zeros}$(h(j)) \geq r$:
 \begin{align}
   Y_r = \sum_{j: f_j > 0} X_{r,j} \label{eq:yr-def}
 \end{align}
@@ -78,16 +78,16 @@ Lad $t$ beskrive værdien af $z$ idet algoritmen terminerer. Så har vi følgend
 \begin{align}
   t \geq r \quad \Longleftrightarrow \quad Y_r > 0  \label{eq:t-greater-eq-r}
 \end{align}
-Idet der minimum har været et element der opfyldte $\event_{r,j}$.\\
+Idet der minimum har været et element der opfyldte at \texttt{zeros}$(h(j)) \geq r$.\\
 
-Vi kan også omskrive det til, at såfremt intet element opfyldte $\event_{r,j}$ har vi:
+Vi kan også omskrive det til, at såfremt intet element opfyldte det har vi:
 \begin{align}
   t \leq r - 1 \quad \Longleftrightarrow \quad Y_r = 0 \label{eq:t-leq-r}
 \end{align}
 
 Siden $h(j)$ er uniformt distribueret over $(\lg n)$-bitstrengene har vi:
 $$
-\E{X_{r,j}} = \P{\mathtt{zeros}(h(j)) \geq r} = \P{h(j) \bmod 2^r = 0} = \frac{1}{2^r}
+\E{X_{r,j}} = \P{\mathtt{zeros}(h(j)) \geq r} = \frac{1}{2^r}
 $$
 
 Vi kan nu bestemme forventning $Y_r$ som følger, idet vi bruger linearity of expectation på \cref{eq:yr-def} og vi har defineret $d$ til at være antal unikke elementer:
@@ -148,25 +148,21 @@ I \cref{eq:benyt-chebyshev} benytter vi Chebyshevs ulighed og at $\Var{Y_r} = \E
 Vi ser at garantierne er relativt små. Det ses både ved at $\hat d$ kan afvige med en del og at vores sandsynligheder kun er begrænset af omkring 25 \%.
 
 \subsection{Median tricket}
-Lav nu $k$ uafhængige estimater i parallel (ved at bruge forskellige hashfunktioner) og returner medianen $\hat d_{(\ceil{k/2})}$ af de $k$ svar.\\
+Lav nu $k$ uafhængige $X_0, \dots, X_{k-1}$ estimater i parallel (ved at bruge forskellige hashfunktioner) og returner medianen $X_{(\ceil{k/2})}$ af de $k$ svar.\\
 
 
-Lad $Z_i = [\hat d_i \geq t]$ og definer $Z$ til
-$$
-Z = \sum_{i \in [k]} Z_i
-$$
+Lad $B_i = [\hat X_i \geq 6d]$ og definer $B = \sum_{i \in [k]}B_i$. Vi ser at median tricket fejler når $B \geq k/2$.\\
 
-Hvis vi bruger $t = 6d$ får vi:
+
+Den forventede værdi af $B$ er:
 $$
-  \E{Z} = \mu = \sum_{i \in [k]} \P{Z_i} \leq k * 1/4 = k/4
+  \E{B} = \mu = \sum_{i \in [k]} \P{B_i} \leq k/4
 $$
 
 Da får vi
 \begin{align*}
-  \P{\hat d_{(\ceil{k/2})} > t}
-  = \P{Z > \ceil{k/2}}
-  = \P{Z \geq 2 \mu}
-  = \P{Z \geq (1 + \delta) \mu }
+  \P{B \geq 2 \mu}
+  = \P{B \geq (1 + \delta) \mu }
   \leq e^{- \delta^2 \mu / 3}
   = e^{- k / 12}
 \end{align*}
