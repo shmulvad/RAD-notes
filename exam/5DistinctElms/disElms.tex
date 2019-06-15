@@ -7,7 +7,7 @@
 \begin{itemize}
   \item \textbf{Problem}
   \item \textbf{AMS algoritmen}
-  \item \textbf{Analyse af sandsynlighed for fejlafvigelse}
+  \item \textbf{Kvaliteten af estimatet}
   \begin{itemize}
     \item For højt estimat $\hat d$
     \item For lavt estimat $\hat d$
@@ -62,7 +62,7 @@ Hvor Process $j$ svarer til vi løbende kører alle $j$'er i strømmen igennem i
 Intuitionen for algoritmen er, at vi forventer 1 ud af de $d$ unikke elementer hashes så \texttt{zeros}$(h(j)) \geq \log d$, og vi forventer ikke nogle elementer at ramme \texttt{zeros}$(h(j)) \gg \log d$. Derfor vil maksværdien af \texttt{zeros}$(h(j))$ være en god approksimation af $\log d$.
 
 
-\subsection{Analyse af sandsynlighed for fejlafvigelse}
+\subsection{Kvaliteten af estimatet}
 
 For ethvert $j \in [n]$ og ethvert heltal $r \geq 0$, definer da indikatorvariablen:\\
 $$

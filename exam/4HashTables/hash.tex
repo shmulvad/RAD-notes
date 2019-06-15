@@ -6,7 +6,7 @@
 
 \begin{itemize}
   \item \textbf{Redegørelse for datastruktur og anvendelse}
-  \item \textbf{Bestemmelse af forventet køretid for indsættelse}
+  \item \textbf{Bestemmelse af forventet opslagstid}
   \item \textbf{Opbygning af hash table der altid sikrer konstant opslagstid}
   \item \textbf{Bestemmelse af pladsforbrug for 2-level hashing}
 \end{itemize}
@@ -54,7 +54,7 @@ Da vil $L[i]$ bestå af alle de elementer hvis nøgle hashes til dette index $i$
 
 Vi ser nemt at denne struktur vil bruge $O(n + m)$ plads.
 
-\subsection{Bestemmelse af forventet køretid for indsættelse}
+\subsection{Bestemmelse af forventet opslagstid}
 
 Tiden det tager at finde ud af om $x \in U$ er i $S$ er proportional med listens længde, $O(1 + | \, L[h(x)] \, |)$.\\
 
