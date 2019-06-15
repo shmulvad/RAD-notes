@@ -6,16 +6,10 @@
 
 \begin{itemize}
   \item \textbf{Freivalds teknik: Matrixprodukt verificering}
+  \item \textbf{Streng-lighed 1: (mod p) fingerprint}
   \item \textbf{Streng-lighed 2: Polynomial identitet med fast $p$}
   \item \textbf{Sæt-lighed med produkter}
   \item \textbf{Pattern Matching: Efficient Fingerprints}
-\end{itemize}
-
-Hvis tid:
-\begin{itemize}
-  \item \textbf{Freivalds teknik: Polynomial identitet}
-  \item \textbf{Schwartz-Zippel Theorem: Multivariabel polynomial identitet}
-  \item \textbf{Streng-lighed 1: (mod p) fingerprint}
 \end{itemize}
 
 
@@ -85,8 +79,71 @@ I \cref{eq:benyt-unikt-rj} benytter vi at alle indgange i $\mathbf r$ er uafhæn
 Vi ser, at vi kan få vores fejlsandsynlighed ned på $\leq 1/2^t$ ved at lave $t$ uafhængige verifikationer i alt med en køretid på $O(t n^2)$.
 
 
+
+\subsection{Streng-lighed 1: (mod p) fingerprint}
+Antag Alice har en $n$-bit streng $\mathbf a = (a_0, \dots, a_{n-1})$ og Bob har en $n$-bit streng $(b_0, \dots, b_{n-1}) = \mathbf b$. De ønsker nu at tjekke $\mathbf a \? \mathbf b$ med høj sandsynlighed, men det skal foregå ved at sende relativt få bits (meget færre end $n$ bits).
+
+Lad
+$$
+  a = \sum_{i \in [n]} \mathbf a_i 2^i
+  \longspace
+  b = \sum_{i \in [n]} \mathbf b_i 2^i
+$$
+
+Vælg et uniformt tilfældigt primtal $p < n^2$ og tjek derefter om:
+$$
+  a \bmod p \? b \bmod p
+$$
+Vi ser, at det højest bruger $2 \lg n$ bits kommunikation.
+
+
+
+\subsubsection{Analyse af sandsynlighed for false positive}
+Vi har en false positive (FP) når
+$$
+  a \bmod p = b \bmod p \quad | \quad a \neq b
+$$
+
+Vi kan omskrive første udsagn til:
+\begin{align}
+  a \bmod p = b \bmod p
+  &\Longleftrightarrow |a - b| \bmod p = 0\\
+  &\Longleftrightarrow p \ \big| |a - b|
+\end{align}
+% https://math.stackexchange.com/questions/211845/what-is-i-mod-p
+hvor $c = |a - b| < 2^n$.
+
+
+Vi skriver nu vores $c$ via primtalsfaktorisering:
+$$
+  c = \prod_i p_i^{d_i} \quad\quad\quad \text{alle $p_i \geq 2$}
+$$
+
+Så vi kigger på hvor mange primtal $p_i$ der optræder hvor graden $d_i \geq 1$. Det kan højest være $\lg n$ fordi de alle sammen skal ganges sammen og de alle er mindst 2. F.eks.:
+$$
+  2 * 3 * 7^2 = \mathbb Z \Longrightarrow \mathbb Z > 2^3
+$$
+
+Da må det betyde, at antal primtal $p \ | \ c$ er $\leq \lg c = n$.
+
+\begin{align}
+  \P{\text{FP}}
+  &= \P{ p \ | \ c} \nonumber \\
+  &\leq \frac{\# (p \ | \ c)}{\# (p < n^2)} \label{eq:primtal} \\
+  &\approx \frac{n}{n^2 / \ln n^2} \label{eq:primtal-saatning} \\
+  &= \frac{2 \ln n}{n} \nonumber
+\end{align}
+
+I \cref{eq:primtal} har vi antallet af primtal $p$ der dividerer $c$ ud af alle de mulige primtal $p < n^2$  vi kunne have valgt.\\
+I \cref{eq:primtal-saatning} benytter vi primtalssætningen der siger, at antallet af primtal mindre end tallet $x$ konvergerer mod $x / \ln x$.
+
+
+
+
+
+
 \subsection{Streng-lighed 2: Polynomial identitet med fast $p$}
-Vi har to bitstrenge $a = (a_0, \dots, a_{n-1})$ og $b = (b_0, \dots, b_{n-1})$. Nu definerer vi:
+Vi har igen to bitstrenge $\mathbf a = (a_0, \dots, a_{n-1})$ og $\mathbf b = (b_0, \dots, b_{n-1})$. Nu definerer vi:
 $$
   A(x) = \sum_{i \in [n]} a_i x^i
   \longspace
@@ -218,64 +275,6 @@ Endelig kan vi udregne:
 \end{align}
 
 Hermed har vi altså bevist Schwartz-Zippel Theoremet, som er en generalisering for polynomial identitet for multivariable polynomier.
-
-
-\subsection{Streng-lighed 1: (mod p) fingerprint}
-Antag Alice har en $n$-bit streng $\mathbf a = (a_0, \dots, a_{n-1})$ og Bob har en $n$-bit streng $(b_0, \dots, b_{n-1}) = \mathbf b$. De ønsker nu at tjekke $\mathbf a \? \mathbf b$ med høj sandsynlighed, men det skal foregå ved at sende relativt få bits (meget færre end $n$ bits).
-
-Lad
-$$
-  a = \sum_{i \in [n]} \mathbf a_i 2^i
-  \longspace
-  b = \sum_{i \in [n]} \mathbf b_i 2^i
-$$
-
-Vælg et uniformt tilfældigt primtal $p < n^2$ og tjek derefter om:
-$$
-  a \bmod p \? b \bmod p
-$$
-Vi ser, at det højest bruger $2 \lg n$ bits kommunikation.
-
-
-
-\subsubsection{Analyse af sandsynlighed for false positive}
-Vi har en false positive (FP) når
-$$
-  a \bmod p = b \bmod p \quad | \quad a \neq b
-$$
-
-Vi kan omskrive første udsagn til:
-\begin{align}
-  a \bmod p = b \bmod p
-  &\Longleftrightarrow |a - b| \bmod p = 0\\
-  &\Longleftrightarrow p \ \big| |a - b|
-\end{align}
-% https://math.stackexchange.com/questions/211845/what-is-i-mod-p
-hvor $c = |a - b| < 2^n$.
-
-
-Vi skriver nu vores $c$ via primtalsfaktorisering:
-$$
-  c = \prod_i p_i^{d_i} \quad\quad\quad \text{alle $p_i \geq 2$}
-$$
-
-Så vi kigger på hvor mange primtal $p_i$ der optræder hvor graden $d_i \geq 1$. Det kan højest være $\lg n$ fordi de alle sammen skal ganges sammen og de alle er mindst 2. F.eks.:
-$$
-  2 * 3 * 7^2 = \mathbb Z \Longrightarrow \mathbb Z > 2^3
-$$
-
-Da må det betyde, at antal primtal $p \ | \ c$ er $\leq \lg c = n$.
-
-\begin{align}
-  \P{\text{FP}}
-  &= \P{ p \ | \ c} \nonumber \\
-  &\leq \frac{\# (p \ | \ c)}{\# (p < n^2)} \label{eq:primtal} \\
-  &\approx \frac{n}{n^2 / \ln n^2} \label{eq:primtal-saatning} \\
-  &= \frac{2 \ln n}{n} \nonumber
-\end{align}
-
-I \cref{eq:primtal} har vi antallet af primtal $p$ der dividerer $c$ ud af alle de mulige primtal $p < n^2$  vi kunne have valgt.\\
-I \cref{eq:primtal-saatning} benytter vi primtalssætningen der siger, at antallet af primtal mindre end tallet $x$ konvergerer mod $x / \ln x$.
 
 
 \end{document}
