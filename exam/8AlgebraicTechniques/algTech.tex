@@ -6,9 +6,9 @@
 
 \begin{itemize}
   \item \textbf{Freivalds teknik: Matrixprodukt verificering}
-  \item \textbf{Streng-lighed 1: (mod p) fingerprint}
-  \item \textbf{Streng-lighed 2: Polynomial identitet med fast $p$}
-  \item \textbf{Sæt-lighed med produkter}
+  \item \textbf{Strenglighed 1: (mod p) fingerprint}
+  \item \textbf{Strenglighed 2: Polynomial identitet med fast $p$}
+  \item \textbf{Sætlighed med produkter}
   \item \textbf{Pattern Matching: Efficient Fingerprints}
 \end{itemize}
 
@@ -157,7 +157,7 @@ $$
 
 Fidusen er, at så kan vi tjekke om bitstrenge er ens ved kun at sende lidt over $2 \lg n$ bits.\\
 
-Vi får at graden af $A$ og $B$ er $d = n-1$, og der kan derfor højest være $n$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
+Vi får at graden af $A$ og $B$ er $d = n-1$, og der kan derfor højest være $n - 1$ forskellige steder hvor de er ens. Således får vi sandsynligheden for en false positive til:
 $$
   \P{\text{FP}}
   = \P{A(r) = B(r) \ | A \neq B}

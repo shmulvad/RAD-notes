@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set your preferred LaTeX compiler
-LaTeXCOMPILER="pdflatex"
+LaTeXCOMPILER="pdflatex -interaction=batchmode"
 exts="aux bbl blg brf idx ilg ind lof log lol lot out toc fls fdb_latexmk synctex.gz"
 
 # Removes log-files
@@ -10,6 +10,7 @@ clean_up_logs () {
     for ext in $exts; do
          rm -f "$1.$ext"
     done
+    printf "Cleaned up ${1}"
 }
 
 compile_tex_file () {
